@@ -9,16 +9,19 @@ NC='\033[0m' # No Color
 # A helper script to perform various git operations
 
 function clean_repo() {
+    echo "git clean -df"
     echo -e "${YELLOW}Cleaning the repo by removing untracked files...${NC}"
     git clean -df
 }
 
 function discard_changes() {
+    echo "git restore ."
     echo -e "${YELLOW}Discarding all local changes...${NC}"
     git restore .
 }
 
 function remove_last_commit() {
+    echo "git reset HEAD~1"
     echo -e "${YELLOW}Removing the last commit...${NC}"
     git reset HEAD~1
 }
@@ -28,6 +31,7 @@ function reset_to_commit() {
         echo -e "${RED}Error: Please provide a commit hash.${NC}"
         exit 1
     fi
+    echo 'git reset --hard "$1"'
     echo -e "${YELLOW}Resetting to commit: ${GREEN}$1${NC}"
     git reset --hard "$1"
 }

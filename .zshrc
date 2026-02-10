@@ -34,13 +34,18 @@ source $ZSH/oh-my-zsh.sh
 #------------------------------------------------------------------------------
 # Development Environment Setup
 #------------------------------------------------------------------------------
+# Clean, organized PATH with no duplicates
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export PATH="$HOME/.local/bin:$HOME/git_scripts:$HOME/.zellij:$DENO_INSTALL/bin:$NVM_DIR/versions/node/v20.11.1/bin:/opt/mw-agent/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$HOME/.local/share/JetBrains/Toolbox/scripts:$GOROOT/bin:$GOPATH/bin"
+
 # Node Version Manager
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"  # Load NVM
 [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"  # Load completion
 
-# Set default Node.js version
-nvm use 22.14.0 &>/dev/null
+# load latest lts version of node using nvm
+nvm use --lts &> /dev/null
 
 # Deno setup
 export DENO_INSTALL="$HOME/.deno"
@@ -48,12 +53,17 @@ export DENO_INSTALL="$HOME/.deno"
 # Cargo environment
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
 
-#------------------------------------------------------------------------------
-# PATH Configuration
-#------------------------------------------------------------------------------
-# Clean, organized PATH with no duplicates
-export PATH="$HOME/.local/bin:$HOME/git_scripts:$HOME/.zellij:$DENO_INSTALL/bin:$NVM_DIR/versions/node/v20.11.1/bin:/opt/mw-agent/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$HOME/.local/share/JetBrains/Toolbox/scripts"
+# pnpm
+export PNPM_HOME="/home/hardik/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
 
+export KUBECONFIG="$HOME/.kube/config:$HOME/work/kubeconfigs/mw-beta-rke-ovh.yaml:$HOME/work/kubeconfigs/sandbox-k8s-kubeconfig.yaml"
+
+export LANG="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
 #------------------------------------------------------------------------------
 # Prompt Configuration
 #------------------------------------------------------------------------------
@@ -63,6 +73,25 @@ export PATH="$HOME/.local/bin:$HOME/git_scripts:$HOME/.zellij:$DENO_INSTALL/bin:
 # Fallback prompt in case powerlevel10k is not loaded
 PS1='\[\e[1;97m\][\[\e[38;5;10m\]\u\[\e[38;5;10m\]@\[\e[38;5;10m\]\h\[\e[1;97m\] \[\e[1;97m\]\W\[\e[1;97m\]]:\[\e[0m\] '
 
-#==============================================================================
-#                           END OF CONFIGURATION
-#==============================================================================
+fpath+=${ZDOTDIR:-~}/.zsh_functions
+
+#----------------------------------------------------------------------------
+# Aliases
+# ---------------------------------------------------------------------------
+alias 'lz=lazydocker'
+alias 'mw=cd ~/work/mw'
+alias 'bf=code ~/work/mw/middleware/bifrost'
+alias 'cbf=cursor ~/work/mw/middleware/bifrost'
+alias 'k=kubectl'
+alias bpftool="/usr/lib/linux-tools/6.8.0-87-generic/bpftool"
+alias perf="/usr/lib/linux-tools/6.8.0-87-generic/perf"
+alias f="yazi"
+alias mgrep="grep -E "
+alias sysdig="sudo sysdig"
+
+# bun completions
+[ -s "/home/hardik/.bun/_bun" ] && source "/home/hardik/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
