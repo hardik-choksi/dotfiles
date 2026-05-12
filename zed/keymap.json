@@ -41,54 +41,66 @@
       "ctrl-l": "workspace::ActivatePaneRight", // Focus right pane
 
       // --- Pane Management (VSCode-style) ---
-      "ctrl-alt-l": ["workspace::MoveItemToPaneInDirection", {"direction": "right"}], // Move tab to right pane (creates if needed)
-      "ctrl-alt-h": ["workspace::MoveItemToPaneInDirection", {"direction": "left"}], // Move tab to left pane (empty panes auto-close)
+      "ctrl-alt-l": [
+        "workspace::MoveItemToPaneInDirection",
+        { "direction": "right" },
+      ], // Move tab to right pane (creates if needed)
+      "ctrl-alt-h": [
+        "workspace::MoveItemToPaneInDirection",
+        { "direction": "left" },
+      ], // Move tab to left pane (empty panes auto-close)
 
       // --- Scrolling ---
       "ctrl-j": "vim::ScrollDown", // Scroll down without moving cursor
       "ctrl-k": "vim::ScrollUp", // Scroll up without moving cursor
 
       // --- Command Palette ---
-      "ctrl-q": "command_palette::Toggle", // Open command palette
-      "space r": "command_palette::Toggle", // Alternative: space-r for command palette
+      // "ctrl-q": "command_palette::Toggle", // Open command palette
+      // "space r": "command_palette::Toggle", // Alternative: space-r for command palette
 
       // --- Selection ---
       "ctrl-a": "editor::SelectEnclosingSymbol", // Select enclosing symbol (expand selection)
-      "ctrl-s": "editor::SelectSmallerSyntaxNode", // Select smaller syntax node (shrink selection)
+
+      // --- Copy / Paste (override vim's ctrl-c/ctrl-v in normal mode) ---
+      "ctrl-c": "editor::Copy", // Copy selection to system clipboard
+      "ctrl-v": "editor::Paste", // Paste from system clipboard
+      "ctrl-x": "editor::Cut", // Cut selection to system clipboard
 
       // --- Code Folding ---
-      "shift-f": "editor::UnfoldLines", // Unfold code
+      "shift-f": "editor::ToggleFold", // Toggle fold/unfold
 
       // --- Tab Navigation ---
       "shift-h": "pane::ActivatePreviousItem", // Previous tab
       "shift-l": "pane::ActivateNextItem", // Next tab
 
       // --- Line Movement ---
-      "alt-j": "editor::MoveLineDown", // Move current line down
       "alt-k": "editor::MoveLineUp", // Move current line up
+      "alt-j": "editor::MoveLineDown", // Move current line down
+      "shift-alt-k": "editor::DuplicateLineUp", // Copy current line up
+      "shift-alt-j": "editor::DuplicateLineDown", // Copy current line down
 
       // --- File & Project Operations ---
-      "space f": "file_finder::Toggle", // Open file finder (fuzzy search)
-      "space e": "project_panel::ToggleFocus", // Toggle focus on project panel (file tree)
-      "space p e": "workspace::ToggleLeftDock", // Toggle left dock (project panel)
+      // File finder removed - use Ctrl+P instead
+      "alt-e": "project_panel::ToggleFocus", // Toggle focus on project panel (file tree) - INSTANT
+      "ctrl-b": "workspace::ToggleLeftDock", // Toggle left dock (project panel)
 
       // --- Tab/Buffer Management ---
-      "space c": "pane::CloseActiveItem", // Close current tab
-      "space q": "pane::CloseAllItems", // Close all tabs in current pane
+      "ctrl-w": "pane::CloseActiveItem", // Close current tab - INSTANT (like browser tabs)
+      "ctrl-q": "pane::CloseAllItems", // Close all tabs in current pane
       "space b l": "pane::CloseItemsToTheRight", // Close tabs to the right
       "space b h": "pane::CloseItemsToTheLeft", // Close tabs to the left
       "space b a": "pane::ReopenClosedItem", // Reopen last closed tab
 
       // --- Terminal ---
-      "space t": "workspace::NewCenterTerminal", // Open new terminal in center
-      "ctrl-space": "workspace::ToggleBottomDock", // Toggle bottom dock (usually terminal)
+      // Terminal removed - use Ctrl+` instead
+      "ctrl-t": "workspace::ToggleBottomDock", // Toggle bottom dock (usually terminal)
 
       // --- Search ---
       "escape": "buffer_search::Dismiss", // Dismiss search buffer
-      "space s t": "workspace::NewSearch", // New workspace-wide search
+      // "space s t": "workspace::NewSearch", // New workspace-wide search
 
       // --- Save ---
-      "space w": "workspace::Save", // Save current file
+      // "space w": "workspace::Save", // Save current file
       "space a": "workspace::SaveAll", // Save all files
 
       // --- LSP (Language Server) Operations ---
@@ -143,30 +155,33 @@
     // === TERMINAL MODE ===
     "context": "Terminal",
     "bindings": {
-      "ctrl-space": "workspace::ToggleBottomDock", // Toggle terminal visibility
+      // "ctrl-space": "workspace::ToggleBottomDock", // Toggle terminal visibility
       "ctrl-o": "workspace::NewTerminal", // Open new terminal tab
       "ctrl-n": "pane::ActivateNextItem", // Next terminal tab
       "ctrl-p": "pane::ActivatePreviousItem", // Previous terminal tab
       "ctrl-b": "pane::CloseItemsToTheLeft", // Close terminal tabs to the left
       "ctrl-i": "pane::CloseItemsToTheRight", // Close terminal tabs to the right
-      "ctrl-k": "pane::CloseInactiveItems", // Close inactive terminal tabs
+      "ctrl-k": "pane::CloseOtherItems", // Close inactive terminal tabs
       "ctrl-q": "pane::CloseActiveItem", // Close current terminal tab
       "ctrl-l": "terminal::Clear", // Clear terminal screen
+      "ctrl-t": "workspace::ToggleBottomDock",
     },
   },
   {
     // === VIM VISUAL MODE ===
     "context": "Editor && vim_mode == visual && !menu && !Terminal",
     "bindings": {
-      "shift-k": "editor::MoveLineUp", // Move selected lines up
-      "shift-j": "editor::MoveLineDown", // Move selected lines down
-      "shift-f": "editor::Fold", // Fold selected code
-      "alt zio": "editor::UnfoldLines", // Unfold selected code
+      // "shift-j": "editor::MoveLineDown", // Move selected lines dow   // --- Tab Navigation ---
+      // "shift-k": "editor::MoveLineUp", // Move selected lines up
+      "shift-h": "pane::ActivatePreviousItem", // Previous tab
+      "shift-l": "pane::ActivateNextItem", // Next tab
+      "shift-f": "editor::ToggleFold", // Toggle fold/unfold
+      // "alt zio": "editor::UnfoldLines", // Unfold selected code
       "space z z": [
         "workspace::SendKeystrokes",
         "alt zio ctrl-c h % shift-i ctrl-c",
       ], // Custom visual mode macro
-      "space /": "editor::ToggleComments", // Toggle comments on selection
+      // "space /": "editor::ToggleComments", // Toggle comments on selection
     },
   },
   {
@@ -236,6 +251,14 @@
     "bindings": {
       "s": "vim::PushSneak", // Sneak forward (2-char search)
       "shift-s": "vim::PushSneakBackward", // Sneak backward
+    },
+  },
+  {
+    // === SAVE & CLIPBOARD (all vim modes) ===
+    // These need to work regardless of vim mode (normal, insert, visual)
+    "context": "Editor",
+    "bindings": {
+      "ctrl-s": "workspace::Save", // Save in any vim mode
     },
   },
   {

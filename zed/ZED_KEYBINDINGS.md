@@ -2,7 +2,7 @@
 
 This document describes all custom keybindings configured for Zed Editor with Vim mode enabled.
 
-## 📚 Table of Contents
+## Table of Contents
 
 - [Keybinding Syntax](#keybinding-syntax)
 - [Pane Management](#pane-management)
@@ -11,7 +11,7 @@ This document describes all custom keybindings configured for Zed Editor with Vi
 - [Tab Management](#tab-management)
 - [Editing & Text Manipulation](#editing--text-manipulation)
 - [LSP & Code Intelligence](#lsp--code-intelligence)
-- [Search & Replace](#search--replace)
+- [Search](#search)
 - [Terminal](#terminal)
 - [Git Operations](#git-operations)
 - [Vim Mode Specific](#vim-mode-specific)
@@ -53,10 +53,10 @@ Understanding the notation:
 
 | Keybinding | Action | Description |
 |------------|--------|-------------|
-| `Ctrl+→` | Expand pane right | Increase current pane width (expand right) |
-| `Ctrl+←` | Expand pane left | Decrease current pane width (expand left) |
-| `Ctrl+↑` | Expand pane up | Increase current pane height (expand up) |
-| `Ctrl+↓` | Expand pane down | Decrease current pane height (expand down) |
+| `Ctrl+Right` | Expand pane right | Increase current pane width (expand right) |
+| `Ctrl+Left` | Expand pane left | Decrease current pane width (expand left) |
+| `Ctrl+Up` | Expand pane up | Increase current pane height (expand up) |
+| `Ctrl+Down` | Expand pane down | Decrease current pane height (expand down) |
 
 ---
 
@@ -64,20 +64,22 @@ Understanding the notation:
 
 ### Tab Navigation
 
-| Keybinding | Action | Description |
-|------------|--------|-------------|
-| `Ctrl+J` | Previous tab | Switch to previous tab (workspace-wide) |
-| `Ctrl+K` | Next tab | Switch to next tab (workspace-wide) |
-| `Shift+H` | Previous tab (vim) | Switch to previous tab in current pane |
-| `Shift+L` | Next tab (vim) | Switch to next tab in current pane |
-| `Space 1-8` | Go to tab N | Jump directly to tab 1-8 |
+| Keybinding | Action | Context | Description |
+|------------|--------|---------|-------------|
+| `Ctrl+J` | Previous tab | Workspace | Switch to previous tab (workspace-wide) |
+| `Ctrl+K` | Next tab | Workspace | Switch to next tab (workspace-wide) |
+| `Shift+H` | Previous tab | Vim normal/visual | Switch to previous tab in current pane |
+| `Shift+L` | Next tab | Vim normal/visual | Switch to next tab in current pane |
+| `Space 1-8` | Go to tab N | Vim normal | Jump directly to tab 1-8 |
 
-### Scrolling
+### Scrolling (Vim Normal Mode)
 
 | Keybinding | Action | Description |
 |------------|--------|-------------|
 | `Ctrl+J` | Scroll down | Scroll viewport down without moving cursor |
 | `Ctrl+K` | Scroll up | Scroll viewport up without moving cursor |
+
+> **Note:** `Ctrl+J/K` scrolls in vim normal mode, but switches tabs at the workspace level.
 
 ### List Navigation (Universal)
 
@@ -90,13 +92,13 @@ Understanding the notation:
 
 ## File & Project Operations
 
-### File Finder & Project Panel
+### Project Panel & Docks
 
 | Keybinding | Action | Description |
 |------------|--------|-------------|
-| `Space F` | File finder | Open fuzzy file finder |
-| `Space E` | Toggle project panel focus | Toggle focus between editor and file tree |
-| `Space P E` | Toggle left dock | Show/hide left dock (project panel) |
+| `Alt+E` | Toggle project panel focus | Toggle focus between editor and file tree |
+| `Ctrl+B` | Toggle left dock | Show/hide left dock (project panel) |
+| `Space E` | Back to editor | Return focus from project panel to editor |
 
 ### Project Panel Operations (when focused)
 
@@ -105,7 +107,8 @@ Understanding the notation:
 | `A` | New file | Create new file |
 | `D` | Delete | Delete file/folder |
 | `R` | Rename | Rename file/folder |
-| `Space E` | Back to editor | Return focus to editor |
+| `Ctrl+N` | Next item | Navigate project panel list down |
+| `Ctrl+P` | Previous item | Navigate project panel list up |
 
 ### Projects
 
@@ -121,8 +124,8 @@ Understanding the notation:
 
 | Keybinding | Action | Description |
 |------------|--------|-------------|
-| `Space C` | Close current tab | Close active tab/buffer |
-| `Space Q` | Close all tabs | Close all tabs in current pane |
+| `Ctrl+W` | Close current tab | Close active tab/buffer (like browser tabs) |
+| `Ctrl+Q` | Close all tabs | Close all tabs in current pane |
 | `Space B L` | Close tabs to the right | Close all tabs to the right of current |
 | `Space B H` | Close tabs to the left | Close all tabs to the left of current |
 | `Space B A` | Reopen closed tab | Reopen the last closed tab |
@@ -131,19 +134,28 @@ Understanding the notation:
 
 ## Editing & Text Manipulation
 
+### Clipboard (Vim Normal Mode)
+
+| Keybinding | Action | Description |
+|------------|--------|-------------|
+| `Ctrl+C` | Copy | Copy selection to system clipboard |
+| `Ctrl+V` | Paste | Paste from system clipboard |
+| `Ctrl+X` | Cut | Cut selection to system clipboard |
+
 ### Line Movement
 
 | Keybinding | Action | Description |
 |------------|--------|-------------|
 | `Alt+J` | Move line down | Move current line or selection down |
 | `Alt+K` | Move line up | Move current line or selection up |
+| `Shift+Alt+J` | Duplicate line down | Copy current line below |
+| `Shift+Alt+K` | Duplicate line up | Copy current line above |
 
 ### Selection
 
 | Keybinding | Action | Description |
 |------------|--------|-------------|
 | `Ctrl+A` | Expand selection | Select enclosing symbol (expand) |
-| `Ctrl+S` | Shrink selection | Select smaller syntax node (shrink) |
 
 ### Comments
 
@@ -153,10 +165,10 @@ Understanding the notation:
 
 ### Code Folding
 
-| Keybinding | Action | Description |
-|------------|--------|-------------|
-| `Shift+F` | Unfold | Unfold code block (normal mode) |
-| `Shift+F` | Fold | Fold selected code (visual mode) |
+| Keybinding | Action | Context | Description |
+|------------|--------|---------|-------------|
+| `Shift+F` | Toggle fold | Normal mode | Fold/unfold code block |
+| `Shift+F` | Toggle fold | Visual mode | Fold/unfold selected code |
 
 ### Custom Formatting Macros
 
@@ -164,12 +176,14 @@ Understanding the notation:
 |------------|--------|-------------|
 | `Space Z F` | Format line | Format current line |
 | `Space Z A` | Format file | Format entire file |
+| `Space Z U` | Custom macro | Custom formatting macro |
+| `Space Z Z` | Visual mode macro | Custom visual mode macro (visual mode only) |
 
 ### Save Operations
 
 | Keybinding | Action | Description |
 |------------|--------|-------------|
-| `Space W` | Save file | Save current file |
+| `Ctrl+S` | Save file | Save current file (works in any vim mode) |
 | `Space A` | Save all | Save all modified files |
 
 ---
@@ -204,46 +218,35 @@ Understanding the notation:
 
 ---
 
-## Search & Replace
+## Search
 
 | Keybinding | Action | Description |
 |------------|--------|-------------|
-| `Space S T` | New search | Open workspace-wide search |
 | `Escape` | Dismiss search | Close search buffer |
 
 ---
 
 ## Terminal
 
-### Terminal Management
+### Terminal Toggle
 
 | Keybinding | Action | Description |
 |------------|--------|-------------|
-| `Space T` | New terminal | Open new terminal in center |
-| `Ctrl+Space` | Toggle terminal | Show/hide bottom dock (terminal) |
+| `Ctrl+T` | Toggle bottom dock | Show/hide bottom dock (terminal) |
+
+### Terminal Tab Management (when terminal is focused)
+
+| Keybinding | Action | Description |
+|------------|--------|-------------|
 | `Ctrl+O` | New terminal tab | Create new terminal tab |
-
-### Terminal Tab Navigation
-
-| Keybinding | Action | Description |
-|------------|--------|-------------|
 | `Ctrl+N` | Next terminal tab | Switch to next terminal |
 | `Ctrl+P` | Previous terminal tab | Switch to previous terminal |
-
-### Terminal Tab Management
-
-| Keybinding | Action | Description |
-|------------|--------|-------------|
 | `Ctrl+Q` | Close terminal tab | Close current terminal |
 | `Ctrl+K` | Close inactive tabs | Close all inactive terminal tabs |
 | `Ctrl+B` | Close tabs to left | Close terminal tabs to the left |
 | `Ctrl+I` | Close tabs to right | Close terminal tabs to the right |
-
-### Terminal Operations
-
-| Keybinding | Action | Description |
-|------------|--------|-------------|
 | `Ctrl+L` | Clear terminal | Clear terminal screen |
+| `Ctrl+T` | Toggle bottom dock | Hide bottom dock from terminal |
 
 ---
 
@@ -266,13 +269,6 @@ Understanding the notation:
 | `J K` | Insert mode | Quick escape (with pause) |
 | `K J` | Insert mode | Quick escape (with pause) |
 
-### Visual Mode Line Movement
-
-| Keybinding | Action | Description |
-|------------|--------|-------------|
-| `Shift+K` | Move lines up | Move selected lines up |
-| `Shift+J` | Move lines down | Move selected lines down |
-
 ### Vim Sneak Navigation
 
 | Keybinding | Action | Description |
@@ -282,31 +278,22 @@ Understanding the notation:
 
 ---
 
-## Command Palette
-
-| Keybinding | Action | Description |
-|------------|--------|-------------|
-| `Ctrl+Q` | Command palette | Open command palette |
-| `Space R` | Command palette | Alternative binding |
-
----
-
-## 🎯 Most Useful Keybindings (Quick Reference)
+## Quick Reference
 
 ### Daily Essentials
 
 ```
-Ctrl+Alt+L/H   → Move tabs between panes (VSCode-style split)
-Ctrl+H/L       → Switch focus between panes
-Space F        → Open file finder
-Space E        → Toggle project panel
-Space C        → Close current tab
-Space W        → Save file
-G D            → Go to definition
-Space L R      → Rename symbol
-Space /        → Toggle comments
-JK             → Escape to normal mode (from insert)
-Ctrl+Space     → Toggle terminal
+Ctrl+Alt+L/H   -> Move tabs between panes (VSCode-style split)
+Ctrl+H/L       -> Switch focus between panes
+Alt+E           -> Toggle project panel focus
+Ctrl+B          -> Toggle left dock
+Ctrl+W          -> Close current tab
+Ctrl+S          -> Save file
+G D             -> Go to definition
+Space L R       -> Rename symbol
+Space /         -> Toggle comments
+JK              -> Escape to normal mode (from insert)
+Ctrl+T          -> Toggle terminal
 ```
 
 ### Power User Tips
@@ -316,15 +303,16 @@ Ctrl+Space     → Toggle terminal
 3. **Fuzzy Everything**: `Ctrl+N/P` works consistently across all menus and lists
 4. **Clean Workspace**: Empty panes automatically close when you move tabs away
 5. **Vim Escape**: Multiple escape sequences (`jk`, `kj`) make it easier to exit insert mode
+6. **Duplicate Lines**: `Shift+Alt+J/K` duplicates the current line up or down
 
 ---
 
-## 📁 Configuration Location
+## Configuration Location
 
 - **Keymap file**: `~/.config/zed/keymap.json`
 - **Settings file**: `~/.config/zed/settings.json`
 
-## 🔗 Resources
+## Resources
 
 - [Zed Keybindings Documentation](https://zed.dev/docs/key-bindings)
 - [Zed Vim Mode Documentation](https://zed.dev/docs/vim)
@@ -332,6 +320,6 @@ Ctrl+Space     → Toggle terminal
 
 ---
 
-**Last Updated**: 2026-02-10
+**Last Updated**: 2026-05-12
 **Zed Version**: Stable
 **Vim Mode**: Enabled

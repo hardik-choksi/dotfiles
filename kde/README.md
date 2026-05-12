@@ -1,33 +1,54 @@
 # KDE Plasma Configuration
 
-This directory contains KDE Plasma desktop environment configurations, primarily focused on custom keyboard shortcuts.
+This directory contains KDE Plasma desktop environment configurations, including custom keyboard shortcuts, window manager settings, and visual effects.
 
 ## Custom Keyboard Shortcuts
 
 ### Desktop Switching
 - `Super + H` - Switch to left desktop
 - `Super + L` - Switch to right desktop
+- `Super + 1-5` - Switch to Desktop 1-5
 
 ### Window Movement Between Desktops
 - `Super + Shift + H` - Move current window to left desktop
 - `Super + Shift + L` - Move current window to right desktop
 
-### Other Notable Shortcuts
-- `Super + E` - Open Dolphin file manager
-- `Super + T` - Open Konsole terminal
-- `Super + R` / `Alt + Space` - Open KRunner
-- `Super + W` - Toggle Overview
-- `Super + D` - Peek at Desktop
-- `Super + 1-9` - Switch to Desktop 1-9
+### Window Management
 - `Alt + Q` / `Alt + F4` - Close window
 - `Super + PgUp` - Maximize window
 - `Super + PgDown` - Minimize window
+
+### Desktop Effects
+- `Super + O` - Toggle Overview
+- `Super + Tab` - Cycle through Overview and Grid View
+- `Super + G` - Toggle Grid View
+- `Super + C` - Toggle Cube
+- `Super + D` - Peek at Desktop
+
+### Application Launchers
+- `Super + T` - Open Konsole terminal
+- `Super + R` / `Alt + Space` - Open KRunner
+- `Super + S` - Open Slack
+- `Super + Shift + R` - Record screen region (Spectacle)
+
+### KWin Effects (Enabled)
+- Blur
+- Contrast
+- Cube
+- Aura Glow
+- Sheet
+- Translucency
+- Wobbly Windows
+
+### Virtual Desktops
+- 5 desktops configured
+- Tiling layout: 25% / 50% / 25% horizontal split
 
 ## Configuration Files
 
 - **kglobalshortcutsrc** - Global keyboard shortcuts
 - **khotkeysrc** - Custom hotkeys configuration
-- **kwinrc** - KWin window manager settings
+- **kwinrc** - KWin window manager settings (effects, tiling, desktops)
 
 ## Setup on New KDE Plasma Environment
 
@@ -99,7 +120,6 @@ If you prefer to configure shortcuts manually or only want specific ones:
 1. **Open System Settings**
    - Press `Alt + Space` or `Super + R` to open KRunner
    - Type "keyboard" and select "Keyboard"
-   - Or: `systemsettings5` → Hardware → Input Devices → Keyboard
 
 2. **Navigate to Shortcuts**
    - Click on the "Shortcuts" tab
@@ -127,8 +147,8 @@ If you prefer to configure shortcuts manually or only want specific ones:
 ### Prerequisites
 
 Before restoring configs, ensure you have:
-- Multiple virtual desktops configured (System Settings → Workspace Behavior → Virtual Desktops)
-- At least 2 desktops for left/right switching to work
+- Multiple virtual desktops configured (System Settings -> Workspace Behavior -> Virtual Desktops)
+- At least 5 desktops for all desktop switching shortcuts to work
 
 ## Updating Configuration
 
@@ -173,8 +193,8 @@ git push
    This ensures all KDE services reload the configurations
 
 3. **Check Desktop Count:**
-   - System Settings → Workspace Behavior → Virtual Desktops
-   - Ensure you have at least 2 desktops configured
+   - System Settings -> Workspace Behavior -> Virtual Desktops
+   - Ensure you have at least 5 desktops configured
    - Desktop switching shortcuts only work with multiple desktops
 
 4. **Verify Configuration Load:**
@@ -192,7 +212,7 @@ If shortcuts don't work, they might conflict with:
 - System-wide shortcuts
 - Desktop environment defaults
 
-Check System Settings → Shortcuts for conflicts (highlighted in yellow/red).
+Check System Settings -> Shortcuts for conflicts (highlighted in yellow/red).
 
 ### Permission Issues
 
