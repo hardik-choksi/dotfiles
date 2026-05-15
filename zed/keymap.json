@@ -1,230 +1,149 @@
 // Zed keymap - Custom Configuration
-//
-// For information on binding keys, see the Zed
-// documentation: https://zed.dev/docs/key-bindings
-//
-// To see the default key bindings run `zed: open default keymap`
-// from the command palette.
-//
-// Keybinding Syntax:
-// - "key1-key2" = Hold key1 and press key2 simultaneously (e.g., "ctrl-h")
-// - "key1 key2" = Press key1, release, then press key2 (chord/sequence)
 [
   {
-    // === GLOBAL UI TOGGLES (work everywhere, any vim mode) ===
     "context": "Workspace",
     "bindings": {
       "ctrl-b": "workspace::ToggleLeftDock",
       "ctrl-t": "workspace::ToggleBottomDock",
       "alt-e": "project_panel::ToggleFocus",
-    },
+      "ctrl-j": "pane::ActivatePreviousItem",
+      "ctrl-k": "pane::ActivateNextItem"
+    }
   },
   {
-    // === MAIN VIM NORMAL MODE BINDINGS ===
     "context": "vim_operator == none && !VimWaiting && vim_mode != insert && !Terminal && mode != single_line",
     "bindings": {
-      // --- Pane Navigation ---
-      "ctrl-h": "workspace::ActivatePaneLeft", // Focus left pane
-      "ctrl-l": "workspace::ActivatePaneRight", // Focus right pane
-
-      // --- Pane Management (VSCode-style) ---
-      "ctrl-alt-l": [
-        "workspace::MoveItemToPaneInDirection",
-        { "direction": "right" },
-      ], // Move tab to right pane (creates if needed)
-      "ctrl-alt-h": [
-        "workspace::MoveItemToPaneInDirection",
-        { "direction": "left" },
-      ], // Move tab to left pane (empty panes auto-close)
-
-      // --- Scrolling ---
-      "ctrl-j": "vim::ScrollDown", // Scroll down without moving cursor
-      "ctrl-k": "vim::ScrollUp", // Scroll up without moving cursor
-
-      // --- Command Palette ---
-      // "ctrl-q": "command_palette::Toggle", // Open command palette
-      // "space r": "command_palette::Toggle", // Alternative: space-r for command palette
-
-      // --- Selection ---
-      "ctrl-a": "editor::SelectAll",
-
-      // --- Code Folding ---
-      "shift-f": "editor::ToggleFold", // Toggle fold/unfold
-
-      // --- Tab Navigation ---
-      "shift-h": "pane::ActivatePreviousItem", // Previous tab
-      "shift-l": "pane::ActivateNextItem", // Next tab
-
-      // --- Line Movement ---
-      "alt-k": "editor::MoveLineUp", // Move current line up
-      "alt-j": "editor::MoveLineDown", // Move current line down
-      "shift-alt-k": "editor::DuplicateLineUp", // Copy current line up
-      "shift-alt-j": "editor::DuplicateLineDown", // Copy current line down
-
-      // --- Tab/Buffer Management ---
-      "ctrl-w": "pane::CloseActiveItem", // Close current tab - INSTANT (like browser tabs)
-      "ctrl-q": "pane::CloseAllItems", // Close all tabs in current pane
-      "space b l": "pane::CloseItemsToTheRight", // Close tabs to the right
-      "space b h": "pane::CloseItemsToTheLeft", // Close tabs to the left
-      "space b a": "pane::ReopenClosedItem", // Reopen last closed tab
-
-      // --- Search ---
-      "escape": "buffer_search::Dismiss", // Dismiss search buffer
-      // "space s t": "workspace::NewSearch", // New workspace-wide search
-
-      // --- Save ---
-      // "space w": "workspace::Save", // Save current file
-      "space a": "workspace::SaveAll", // Save all files
-
-      // --- LSP (Language Server) Operations ---
-      "space l s": "project_symbols::Toggle", // Toggle project symbols (outline)
-      "space l i": "editor::GoToImplementationSplit", // Go to implementation in split
-      "space l r": "editor::Rename", // Rename symbol
-      "space l j": "editor::GoToDiagnostic", // Go to next diagnostic (error/warning)
-
-      // --- Comments ---
-      "space /": "editor::ToggleComments", // Toggle line/block comments
-
-      // --- Quick Tab Access (by number) ---
-      "space 1": ["pane::ActivateItem", 0], // Go to tab 1
-      "space 2": ["pane::ActivateItem", 1], // Go to tab 2
-      "space 3": ["pane::ActivateItem", 2], // Go to tab 3
-      "space 4": ["pane::ActivateItem", 3], // Go to tab 4
-      "space 5": ["pane::ActivateItem", 4], // Go to tab 5
-      "space 6": ["pane::ActivateItem", 5], // Go to tab 6
-      "space 7": ["pane::ActivateItem", 6], // Go to tab 7
-      "space 8": ["pane::ActivateItem", 7], // Go to tab 8
-
-      // --- Git ---
-      "space g b": "git::Branch", // Git branch operations
-
-      // --- List Navigation ---
-      "ctrl-n": "menu::SelectNext", // Navigate down in lists (e.g., file finder, search results)
-      "ctrl-p": "menu::SelectPrevious", // Navigate up in lists
-    },
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-alt-l": ["workspace::MoveItemToPaneInDirection", {"direction": "right"}],
+      "ctrl-alt-h": ["workspace::MoveItemToPaneInDirection", {"direction": "left"}],
+      "ctrl-j": "vim::ScrollDown",
+      "ctrl-k": "vim::ScrollUp",
+      "ctrl-a": "editor::SelectEnclosingSymbol",
+      "ctrl-q": "pane::CloseAllItems",
+      "ctrl-w": "pane::CloseActiveItem",
+      "space f": "editor::ToggleFold",
+      "shift-f": "editor::ToggleFoldAll",
+      "shift-h": "pane::ActivatePreviousItem",
+      "shift-l": "pane::ActivateNextItem",
+      "alt-j": "editor::MoveLineDown",
+      "alt-k": "editor::MoveLineUp",
+      "shift-alt-j": "editor::DuplicateLineDown",
+      "shift-alt-k": "editor::DuplicateLineUp",
+      "space b l": "pane::CloseItemsToTheRight",
+      "space b h": "pane::CloseItemsToTheLeft",
+      "space b a": "pane::ReopenClosedItem",
+      "escape": "buffer_search::Dismiss",
+      "space a": "workspace::SaveAll",
+      "space l s": "project_symbols::Toggle",
+      "space l i": "editor::GoToImplementationSplit",
+      "space l r": "editor::Rename",
+      "space l j": "editor::GoToDiagnostic",
+      "space /": "editor::ToggleComments",
+      "space 1": ["pane::ActivateItem", 0],
+      "space 2": ["pane::ActivateItem", 1],
+      "space 3": ["pane::ActivateItem", 2],
+      "space 4": ["pane::ActivateItem", 3],
+      "space 5": ["pane::ActivateItem", 4],
+      "space 6": ["pane::ActivateItem", 5],
+      "space 7": ["pane::ActivateItem", 6],
+      "space 8": ["pane::ActivateItem", 7],
+      "space g b": "git::Branch",
+      "ctrl-n": "menu::SelectNext",
+      "ctrl-p": "menu::SelectPrevious"
+    }
   },
   {
-    // === WORKSPACE-LEVEL PANE NAVIGATION ===
     "context": "Workspace && !VimWaiting && vim_mode != insert",
     "bindings": {
-      "ctrl-h": "workspace::ActivatePaneLeft", // Focus left pane
-      "ctrl-l": "workspace::ActivatePaneRight", // Focus right pane
-      "ctrl-n": "menu::SelectNext", // Ensure workspace-wide list navigation
-      "ctrl-p": "menu::SelectPrevious",
-    },
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "space r p": "projects::OpenRecent"
+    }
   },
   {
-    // === TERMINAL MODE ===
     "context": "Terminal",
     "bindings": {
-      // "ctrl-space": "workspace::ToggleBottomDock", // Toggle terminal visibility
-      "ctrl-o": "workspace::NewTerminal", // Open new terminal tab
-      "ctrl-n": "pane::ActivateNextItem", // Next terminal tab
-      "ctrl-p": "pane::ActivatePreviousItem", // Previous terminal tab
-      "ctrl-k": "pane::CloseOtherItems", // Close inactive terminal tabs
-      "ctrl-q": "pane::CloseActiveItem", // Close current terminal tab
-      "ctrl-l": "terminal::Clear", // Clear terminal screen
-    },
+      "ctrl-space": "workspace::ToggleBottomDock",
+      "ctrl-o": "workspace::NewTerminal",
+      "ctrl-n": "pane::ActivateNextItem",
+      "ctrl-p": "pane::ActivatePreviousItem",
+      "ctrl-b": "pane::CloseItemsToTheLeft",
+      "ctrl-i": "pane::CloseItemsToTheRight",
+      "ctrl-k": "pane::CloseInactiveItems",
+      "ctrl-q": "pane::CloseActiveItem",
+      "ctrl-l": "terminal::Clear"
+    }
   },
   {
-    // === VIM VISUAL MODE ===
     "context": "Editor && vim_mode == visual && !menu && !Terminal",
     "bindings": {
-      // "shift-j": "editor::MoveLineDown", // Move selected lines dow   // --- Tab Navigation ---
-      // "shift-k": "editor::MoveLineUp", // Move selected lines up
-      "shift-h": "pane::ActivatePreviousItem", // Previous tab
-      "shift-l": "pane::ActivateNextItem", // Next tab
-      "shift-f": "editor::ToggleFold", // Toggle fold/unfold
-      // "space /": "editor::ToggleComments", // Toggle comments on selection
-    },
+      "shift-k": "editor::MoveLineUp",
+      "shift-j": "editor::MoveLineDown",
+      "shift-f": "editor::Fold"
+    }
   },
   {
-    // === VIM INSERT MODE (Extended) ===
     "context": "Editor && vim_mode == insert && !Terminal",
     "bindings": {
-      // Multiple escape sequences for convenience
-      "jk": "vim::NormalBefore", // Quick escape: jk
-      "kj": "vim::NormalBefore", // Quick escape: kj
-      "j k": "vim::NormalBefore", // Quick escape: j k (with space)
-      "k j": "vim::NormalBefore", // Quick escape: k j (with space)
-
-      // Autocomplete navigation
-      "ctrl-n": "menu::SelectNext", // Navigate autocomplete suggestions down
-      "ctrl-p": "menu::SelectPrevious", // Navigate autocomplete suggestions up
-    },
+      "j k": "vim::NormalBefore",
+      "k j": "vim::NormalBefore",
+      "ctrl-n": "menu::SelectNext",
+      "ctrl-p": "menu::SelectPrevious",
+      "shift-h": "pane::ActivatePreviousItem",
+      "shift-l": "pane::ActivateNextItem"
+    }
   },
   {
-    // === PROJECT PANEL (File Tree) ===
     "context": "!renaming && ProjectPanel && !Terminal && !VimWaiting && vim_mode != insert && !editing",
     "bindings": {
-      "a": "project_panel::NewFile", // Add new file
-      "d": "project_panel::Delete", // Delete file/folder
-      "r": "project_panel::Rename", // Rename file/folder
-      "space e": "workspace::ActivatePaneRight", // Switch focus back to editor
-      "ctrl-n": "menu::SelectNext", // Navigate project panel list down
-      "ctrl-p": "menu::SelectPrevious", // Navigate project panel list up
-    },
+      "a": "project_panel::NewFile",
+      "d": "project_panel::Delete",
+      "r": "project_panel::Rename",
+      "ctrl-n": "menu::SelectNext",
+      "ctrl-p": "menu::SelectPrevious"
+    }
   },
   {
-    // === PROJECT OPERATIONS ===
-    "context": "Workspace && !VimWaiting && vim_mode != insert",
-    "bindings": {
-      "space r p": "projects::OpenRecent", // Open recent projects
-    },
-  },
-  {
-    // === PANE RESIZING ===
     "context": "(Editor || ProjectPanel || Terminal || OutlinePanel) && vim_mode != insert && !VimWaiting && !editing",
     "bindings": {
-      "ctrl-right": "vim::ResizePaneRight", // Increase pane width (expand right)
-      "ctrl-left": "vim::ResizePaneLeft", // Decrease pane width (expand left)
-      "ctrl-up": "vim::ResizePaneUp", // Increase pane height (expand up)
-      "ctrl-down": "vim::ResizePaneDown", // Decrease pane height (expand down)
-    },
+      "ctrl-right": "vim::ResizePaneRight",
+      "ctrl-left": "vim::ResizePaneLeft",
+      "ctrl-up": "vim::ResizePaneUp",
+      "ctrl-down": "vim::ResizePaneDown"
+    }
   },
   {
-    // === LSP NAVIGATION (Normal Mode) ===
     "context": "Editor && vim_mode != insert && !VimWaiting && mode != single_line",
     "bindings": {
-      "g d": "editor::GoToDefinition", // Go to definition
-      "g i": "editor::GoToImplementation", // Go to implementation
-      "g r": "editor::FindAllReferences", // Find all references
-    },
+      "g d": "editor::GoToDefinition",
+      "g i": "editor::GoToImplementation",
+      "g r": "editor::FindAllReferences"
+    }
   },
-  // {
-  //   // === DISABLE SPACE IN INSERT MODE ===
-  //   // Prevents space-based chords from triggering in insert mode
-  //   "context": "(Editor && vim_mode == insert) || Terminal || mode == single_line",
-  //   "bindings": {
-  //     "space": null,
-  //   },
-  // },
   {
-    // === VIM SNEAK NAVIGATION ===
     "context": "vim_mode == normal || vim_mode == visual",
     "bindings": {
-      "s": "vim::PushSneak", // Sneak forward (2-char search)
-    },
+      "s": "vim::PushSneak",
+      "shift-s": "vim::PushSneakBackward"
+    }
   },
   {
-    // === SAVE & CLIPBOARD (all vim modes) ===
-    // These need to work regardless of vim mode (normal, insert, visual)
     "context": "Editor && !menu",
     "bindings": {
       "ctrl-s": "workspace::Save",
       "ctrl-c": "editor::Copy",
       "ctrl-v": "editor::Paste",
-      "ctrl-x": "editor::Cut",
-    },
+      "ctrl-x": "editor::Cut"
+    }
   },
   {
-    // === AUTOCOMPLETE & CODE ACTIONS ===
     "context": "Editor && (showing_code_actions || showing_completions)",
     "bindings": {
-      "shift-tab": "editor::ContextMenuPrevious", // Navigate context menu up
-      "tab": "editor::ContextMenuNext", // Navigate context menu down
-      "pageup": "editor::ContextMenuFirst", // Jump to first item
-      "pagedown": "editor::ContextMenuLast", // Jump to last item
-    },
-  },
+      "shift-tab": "editor::ContextMenuPrevious",
+      "tab": "editor::ContextMenuNext",
+      "pageup": "editor::ContextMenuFirst",
+      "pagedown": "editor::ContextMenuLast"
+    }
+  }
 ]
