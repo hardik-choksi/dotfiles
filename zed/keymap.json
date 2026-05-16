@@ -4,7 +4,10 @@
     "context": "Workspace",
     "bindings": {
       "ctrl-b": "workspace::ToggleLeftDock",
-      "ctrl-t": "workspace::ToggleBottomDock",
+      "ctrl-t": "terminal_panel::ToggleFocus",
+      "ctrl-shift-o": "project_symbols::Toggle",
+      "ctrl-space": "workspace::ToggleBottomDock",
+      "ctrl-shift-d": "debug_panel::ToggleFocus",
       "alt-e": "project_panel::ToggleFocus",
       "ctrl-j": "pane::ActivatePreviousItem",
       "ctrl-k": "pane::ActivateNextItem"
@@ -32,7 +35,8 @@
       "shift-alt-k": "editor::DuplicateLineUp",
       "escape": "buffer_search::Dismiss",
       "ctrl-n": "menu::SelectNext",
-      "ctrl-p": "menu::SelectPrevious"
+      "ctrl-p": "menu::SelectPrevious",
+      "ctrl-shift-i": "editor::Format"
     }
   },
   {
@@ -45,6 +49,7 @@
   {
     "context": "Terminal",
     "bindings": {
+      "ctrl-t": "workspace::ToggleBottomDock",
       "ctrl-space": "workspace::ToggleBottomDock",
       "ctrl-o": "workspace::NewTerminal",
       "ctrl-n": "pane::ActivateNextItem",
@@ -54,6 +59,12 @@
       "ctrl-k": "pane::CloseInactiveItems",
       "ctrl-q": "pane::CloseActiveItem",
       "ctrl-l": "terminal::Clear"
+    }
+  },
+  {
+    "context": "DebugPanel",
+    "bindings": {
+      "ctrl-t": "terminal_panel::ToggleFocus"
     }
   },
   {
