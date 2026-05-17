@@ -4,9 +4,8 @@
     "context": "Workspace",
     "bindings": {
       "ctrl-b": "workspace::ToggleLeftDock",
-      "ctrl-t": "terminal_panel::ToggleFocus",
       "ctrl-shift-o": "project_symbols::Toggle",
-      "ctrl-space": "workspace::ToggleBottomDock",
+      "ctrl-shift-t": "workspace::NewTerminal",
       "ctrl-shift-d": "debug_panel::ToggleFocus",
       "alt-e": "project_panel::ToggleFocus",
       "ctrl-j": "pane::ActivatePreviousItem",
@@ -64,7 +63,7 @@
   {
     "context": "DebugPanel",
     "bindings": {
-      "ctrl-t": "terminal_panel::ToggleFocus"
+      "ctrl-t": "terminal_panel::Toggle"
     }
   },
   {
@@ -81,9 +80,7 @@
       "j k": "vim::NormalBefore",
       "k j": "vim::NormalBefore",
       "ctrl-n": "menu::SelectNext",
-      "ctrl-p": "menu::SelectPrevious",
-      "shift-h": "pane::ActivatePreviousItem",
-      "shift-l": "pane::ActivateNextItem"
+      "ctrl-p": "menu::SelectPrevious"
     }
   },
   {
@@ -136,6 +133,11 @@
       "tab": "editor::ContextMenuNext",
       "pageup": "editor::ContextMenuFirst",
       "pagedown": "editor::ContextMenuLast"
+    }
+  },
+  {
+    "bindings": {
+      "ctrl-t": "terminal_panel::Toggle"
     }
   }
 ]
