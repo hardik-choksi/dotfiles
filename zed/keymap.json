@@ -4,7 +4,9 @@
     "context": "Workspace",
     "bindings": {
       "ctrl-b": "workspace::ToggleLeftDock",
-      "ctrl-t": "workspace::ToggleBottomDock",
+      "ctrl-shift-o": "project_symbols::Toggle",
+      "ctrl-shift-t": "workspace::NewTerminal",
+      "ctrl-shift-d": "debug_panel::ToggleFocus",
       "alt-e": "project_panel::ToggleFocus",
       "ctrl-j": "pane::ActivatePreviousItem",
       "ctrl-k": "pane::ActivateNextItem"
@@ -32,7 +34,8 @@
       "shift-alt-k": "editor::DuplicateLineUp",
       "escape": "buffer_search::Dismiss",
       "ctrl-n": "menu::SelectNext",
-      "ctrl-p": "menu::SelectPrevious"
+      "ctrl-p": "menu::SelectPrevious",
+      "ctrl-shift-i": "editor::Format"
     }
   },
   {
@@ -45,6 +48,7 @@
   {
     "context": "Terminal",
     "bindings": {
+      "ctrl-t": "workspace::ToggleBottomDock",
       "ctrl-space": "workspace::ToggleBottomDock",
       "ctrl-o": "workspace::NewTerminal",
       "ctrl-n": "pane::ActivateNextItem",
@@ -54,6 +58,12 @@
       "ctrl-k": "pane::CloseInactiveItems",
       "ctrl-q": "pane::CloseActiveItem",
       "ctrl-l": "terminal::Clear"
+    }
+  },
+  {
+    "context": "DebugPanel",
+    "bindings": {
+      "ctrl-t": "terminal_panel::Toggle"
     }
   },
   {
@@ -70,9 +80,7 @@
       "j k": "vim::NormalBefore",
       "k j": "vim::NormalBefore",
       "ctrl-n": "menu::SelectNext",
-      "ctrl-p": "menu::SelectPrevious",
-      "shift-h": "pane::ActivatePreviousItem",
-      "shift-l": "pane::ActivateNextItem"
+      "ctrl-p": "menu::SelectPrevious"
     }
   },
   {
@@ -125,6 +133,11 @@
       "tab": "editor::ContextMenuNext",
       "pageup": "editor::ContextMenuFirst",
       "pagedown": "editor::ContextMenuLast"
+    }
+  },
+  {
+    "bindings": {
+      "ctrl-t": "terminal_panel::Toggle"
     }
   }
 ]
