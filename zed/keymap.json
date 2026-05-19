@@ -21,6 +21,7 @@
       "ctrl-alt-h": ["workspace::MoveItemToPaneInDirection", {"direction": "left"}],
       "ctrl-j": "vim::ScrollDown",
       "ctrl-k": "vim::ScrollUp",
+      "ctrl-y": "editor::Redo",
       "ctrl-b": "workspace::ToggleLeftDock",
       "ctrl-a": "editor::SelectEnclosingSymbol",
       "ctrl-q": "pane::CloseAllItems",
