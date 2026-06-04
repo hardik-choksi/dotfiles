@@ -5,6 +5,10 @@
 #------------------------------------------------------------------------------
 # SSH Agent Setup (must be BEFORE instant prompt to avoid console output warning)
 #------------------------------------------------------------------------------
+# Set ksshaskpass so KDE wallet stores the SSH passphrase
+export SSH_ASKPASS=/usr/bin/ksshaskpass
+export SSH_ASKPASS_REQUIRE=prefer
+
 # Start keychain and add SSH key (prompts for passphrase only once per boot)
 eval $(keychain --eval --quiet --agents ssh id_rsa 2>/dev/null)
 
@@ -98,6 +102,7 @@ alias bpftool="/usr/lib/linux-tools/6.8.0-87-generic/bpftool"
 alias f="yazi"
 alias 'bat=batcat'
 alias 'hex=dz6'
+alias 'cb=xclip -selection clipboard'
 
 # bun completions
 [ -s "/home/hardik/.bun/_bun" ] && source "/home/hardik/.bun/_bun"
