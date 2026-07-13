@@ -118,6 +118,15 @@
   # package in systemPackages would not do. `jdk` is currently JDK 21 (LTS).
   programs.java.enable = true;
 
+  # `vi` is muscle memory, but nixpkgs' vim provides only a `vim` binary --
+  # there is no `vi`, so it would be command-not-found. Alias it, and make vim
+  # the default $EDITOR.
+  programs.vim = {
+    enable = true;
+    defaultEditor = true;
+  };
+  environment.shellAliases.vi = "vim";
+
   # Flatpak, as an escape hatch for apps nixpkgs doesn't carry (or has dropped
   # -- OpenLens, for instance, is still on Flathub). The module asserts that
   # xdg.portal.enable is true; plasma6 already sets it, so nothing to add.
@@ -144,7 +153,8 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    # vim is installed by programs.vim above (which also sets EDITOR and the
+    # `vi` alias), so it is not repeated here.
     wget
     keepassxc
     alacritty
@@ -161,6 +171,10 @@
 
     # Kubernetes
     kubectl
+    kubernetes-helm  # NB: NOT `helm` -- that attribute is a polyphonic
+                     # synthesizer. This is the Kubernetes package manager.
+    kubectx          # provides both kubectx and kubens
+    stern            # multi-pod log tailing
     k9s
     kind          # spins clusters up in Docker; needs virtualisation.docker
     freelens-bin  # NB: the attribute is freelens-bin, not freelens.
@@ -175,6 +189,38 @@
 
     # API
     postman       # unfree; needs allowUnfree above
+
+    # Editors
+    vscode        # unfree; needs allowUnfree above
+
+    # Build toolchain. NixOS ships no compiler by default -- if you build
+    # anything outside a devshell you need these explicitly.
+    gcc
+    gnumake
+    pkg-config
+
+    # CLI
+    ripgrep
+    gh
+    jq
+    bat
+    btop
+    tree
+    unzip
+    nmap
+    python3
+
+    # Networking. NixOS's default path has no ping, ip, ss or traceroute, so
+    # these are not as redundant as they look on a normal distro. There is no
+    # `nettools`/`net-tools` in nixpkgs -- the old ifconfig/netstat/route
+    # package is deprecated upstream; use iproute2's `ip` and `ss` instead.
+    dnsutils      # dig, nslookup, host
+    iputils       # ping
+    iproute2      # ip, ss
+    traceroute
+    mtr
+    whois
+    socat
 
     # Media
     mpv
