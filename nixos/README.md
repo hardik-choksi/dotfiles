@@ -44,6 +44,10 @@ Three of these are not what you'd naively guess:
   Mirantis pulled Lens's source in 2023, so it could no longer be rebuilt and
   the project is deprecated. [FreeLens](https://github.com/freelensapp/freelens)
   is the community fork that succeeded it (MIT).
+- **`stremio-linux-shell`**, not `stremio`. Plain `stremio` was removed in
+  Feb 2026 (it depended on the vulnerable, outdated Qt5 WebEngine) and is now
+  a `throw` pointing at this replacement. The binary is still `stremio`, and
+  it bundles the streaming server — there's no separate service to enable.
 - **No `nvm`.** It cannot work on NixOS: it downloads prebuilt Node binaries
   that expect a dynamic linker at `/lib64/ld-linux-x86-64.so.2`, which NixOS
   does not have. (`fnm` has the same problem — it's also just a downloader of

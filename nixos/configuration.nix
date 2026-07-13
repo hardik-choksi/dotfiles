@@ -161,6 +161,12 @@
 
     # Media
     mpv
+    stremio-linux-shell  # NB: the attribute is stremio-linux-shell, and the
+                         # binary is `stremio`. Plain `stremio` was removed in
+                         # Feb 2026 (it pulled in the vulnerable, outdated qt5
+                         # webengine) and is now a `throw`, which points here.
+                         # It bundles the streaming server; there is no
+                         # separate service to enable.
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
