@@ -1,232 +1,105 @@
 # KDE Plasma Configuration
 
-This directory contains KDE Plasma desktop environment configurations, including custom keyboard shortcuts, window manager settings, and visual effects.
+KDE Plasma settings: keyboard shortcuts, window manager, fonts, and app config.
 
 ## Custom Keyboard Shortcuts
 
 ### Desktop Switching
-- `Super + H` - Switch to left desktop
-- `Super + L` - Switch to right desktop
-- `Super + 1-5` - Switch to Desktop 1-5
+- `Super + H` — Switch to left desktop
+- `Super + L` — Switch to right desktop
+- `Super + 1-5` — Switch to Desktop 1-5
 
 ### Window Movement Between Desktops
-- `Super + Shift + H` - Move current window to left desktop
-- `Super + Shift + L` - Move current window to right desktop
+- `Super + Shift + H` — Move current window to left desktop
+- `Super + Shift + L` — Move current window to right desktop
 
 ### Window Management
-- `Alt + Q` / `Alt + F4` - Close window
-- `Super + PgUp` - Maximize window
-- `Super + PgDown` - Minimize window
+- `Alt + Q` / `Alt + F4` — Close window
+- `Super + PgUp` — Maximize window
+- `Super + PgDown` — Minimize window
 
 ### Desktop Effects
-- `Super + O` - Toggle Overview
-- `Super + Tab` - Cycle through Overview and Grid View
-- `Super + G` - Toggle Grid View
-- `Super + C` - Toggle Cube
-- `Super + D` - Peek at Desktop
+- `Super + O` — Toggle Overview
+- `Super + Tab` — Cycle through Overview and Grid View
+- `Super + G` — Toggle Grid View
+- `Super + C` — Toggle Cube
+- `Super + D` — Peek at Desktop
 
 ### Application Launchers
-- `Super + T` - Open Konsole terminal
-- `Super + R` / `Alt + Space` - Open KRunner
-- `Super + S` - Open Slack
-- `Super + Shift + R` - Record screen region (Spectacle)
+- `Super + T` — Konsole
+- `Super + R` / `Alt + Space` — KRunner
+- `Super + S` — Slack
+- `Super + Shift + R` — Record screen region (Spectacle)
+
+These live in `kglobalshortcutsrc` under `[services][<app>.desktop]`, keyed by
+`.desktop` file name. `Super + S` only works if a `slack.desktop` exists.
 
 ### KWin Effects (Enabled)
-- Blur
-- Contrast
-- Cube
-- Aura Glow
-- Sheet
-- Translucency
-- Wobbly Windows
+Blur, Contrast, Cube, Mouse Mark, Sheet, Translucency, Wobbly Windows.
 
 ### Virtual Desktops
-- 5 desktops configured
-- Tiling layout: 25% / 50% / 25% horizontal split
+5 desktops (`Web`, `code`, + 3 unnamed), single row.
 
 ## Configuration Files
 
-- **kglobalshortcutsrc** - Global keyboard shortcuts
-- **khotkeysrc** - Custom hotkeys configuration
-- **kwinrc** - KWin window manager settings (effects, tiling, desktops)
+| File | Contents |
+|------|----------|
+| `kglobalshortcutsrc` | All global shortcuts, incl. app launchers |
+| `kwinrc` | KWin: effects, virtual desktops, night colour |
+| `kdeglobals` | Fonts, colour scheme, look-and-feel, icon theme |
+| `konsolerc` | Konsole settings (default profile, colour scheme) |
+| `konsole/` | Konsole profile + its colour scheme |
+| `spectaclerc` | Screenshot tool settings |
+| `dolphinrc` | File manager settings |
+| `kscreenlockerrc` | Screen locker settings |
 
-## Setup on New KDE Plasma Environment
+### What is deliberately not tracked
 
-### Automated Installation (Easiest)
+- **`khotkeysrc`** — was tracked here previously, but contained only KDE's
+  stock boilerplate (Konqueror mouse gestures and disabled example actions);
+  it held no custom hotkeys. KHotkeys is also removed in Plasma 6.
+- **Tiling layouts** (`kwinrc` `[Tiling][<uuid>]`) — keyed by per-machine
+  desktop/screen UUIDs, so they don't transfer. Re-draw with `Meta+T`.
+- **Window geometry, recent-file history, last-save paths** — machine state,
+  stripped by `update.sh`.
+- **Themes** — the active look (Andromeda look-and-feel, YAMIS icons,
+  MateriaDark colours, Aurorae window decorations) is installed by hand into
+  `~/.local/share` and is *not* in this repo. `kdeglobals` only *names* them;
+  on a machine without them installed, KDE silently falls back to Breeze.
 
-Use the provided installation script:
-
-```bash
-cd ~/dotfiles/kde
-
-# Option 1: Direct copy (recommended for most users)
-./install.sh
-
-# Option 2: Symbolic links (auto-syncs changes)
-./install.sh --symlink
-```
-
-The script will:
-- Backup existing configurations
-- Install your custom shortcuts
-- Provide instructions for applying changes
-
-### Quick Restore (Manual)
-
-If you prefer manual installation:
-
-#### Method 1: Direct Copy
-```bash
-# Backup existing configs (optional)
-cp ~/.config/kglobalshortcutsrc ~/.config/kglobalshortcutsrc.bak
-cp ~/.config/khotkeysrc ~/.config/khotkeysrc.bak
-cp ~/.config/kwinrc ~/.config/kwinrc.bak
-
-# Copy configurations from dotfiles
-cp ~/dotfiles/kde/config/kglobalshortcutsrc ~/.config/
-cp ~/dotfiles/kde/config/khotkeysrc ~/.config/
-cp ~/dotfiles/kde/config/kwinrc ~/.config/
-
-# Restart KWin to apply changes
-kwin_x11 --replace &  # For X11
-# OR
-kwin_wayland --replace &  # For Wayland
-
-# Or simply log out and log back in
-```
-
-#### Method 2: Symbolic Links (Auto-sync)
-This method keeps your configs in sync with the dotfiles repo:
-
-```bash
-# Remove existing configs
-rm ~/.config/kglobalshortcutsrc ~/.config/khotkeysrc ~/.config/kwinrc
-
-# Create symlinks
-ln -sf ~/dotfiles/kde/config/kglobalshortcutsrc ~/.config/kglobalshortcutsrc
-ln -sf ~/dotfiles/kde/config/khotkeysrc ~/.config/khotkeysrc
-ln -sf ~/dotfiles/kde/config/kwinrc ~/.config/kwinrc
-
-# Restart KWin
-kwin_x11 --replace &  # Or kwin_wayland --replace &
-```
-
-**Note:** With symlinks, any changes you make via System Settings will automatically update the dotfiles. Remember to commit changes!
-
-### Manual Configuration via GUI
-
-If you prefer to configure shortcuts manually or only want specific ones:
-
-1. **Open System Settings**
-   - Press `Alt + Space` or `Super + R` to open KRunner
-   - Type "keyboard" and select "Keyboard"
-
-2. **Navigate to Shortcuts**
-   - Click on the "Shortcuts" tab
-
-3. **Configure Desktop Switching**
-   - Search for "KWin" in the search box
-   - Find "Switch One Desktop to the Left"
-     - Click on the shortcut field
-     - Press `Super + H`
-   - Find "Switch One Desktop to the Right"
-     - Click on the shortcut field
-     - Press `Super + L`
-
-4. **Configure Window Movement**
-   - Still in KWin section:
-   - Find "Window One Desktop to the Left"
-     - Set to `Super + Shift + H`
-   - Find "Window One Desktop to the Right"
-     - Set to `Super + Shift + L`
-
-5. **Apply Changes**
-   - Click "Apply" at the bottom
-   - Changes take effect immediately
-
-### Prerequisites
-
-Before restoring configs, ensure you have:
-- Multiple virtual desktops configured (System Settings -> Workspace Behavior -> Virtual Desktops)
-- At least 5 desktops for all desktop switching shortcuts to work
-
-## Updating Configuration
-
-### Using the Update Script (Easiest)
+## Setup on a New KDE Plasma Environment
 
 ```bash
 cd ~/dotfiles/kde
-./update.sh
+
+./install.sh            # direct copy (recommended)
+./install.sh --symlink  # symlink, so System Settings edits auto-sync
 ```
 
-The script will copy your current KDE configs to the dotfiles and show you the next steps.
+The script backs up existing configs, installs these, and copies the Konsole
+profile into `~/.local/share/konsole/`.
 
-### Manual Update
+Then log out and back in (or `kwin_wayland --replace &` / `kwin_x11 --replace &`).
 
-When you make changes to your KDE shortcuts and want to save them:
+## Updating
 
 ```bash
-# Copy updated configs to dotfiles (skip if using symlinks)
-cp ~/.config/kglobalshortcutsrc ~/dotfiles/kde/config/
-cp ~/.config/khotkeysrc ~/dotfiles/kde/config/
-cp ~/.config/kwinrc ~/dotfiles/kde/config/
-
-# Commit changes
-cd ~/dotfiles
-git add kde/config/
-git commit -m "Update KDE keyboard shortcuts"
-git push
+cd ~/dotfiles/kde
+./update.sh     # pulls live config back in, stripping machine-specific state
+cd ~/dotfiles && git diff && git add kde/ && git commit -m 'Update KDE config'
 ```
 
-**Note:** If you're using symlinks (Method 2), the files are already updated in your dotfiles repo. Just commit directly!
+## NixOS
+
+The NixOS box (`~/nixos-config`) reproduces these shortcuts declaratively via
+[plasma-manager](https://github.com/nix-community/plasma-manager) — see
+`plasma.nix` there. That is the source of truth for NixOS; this directory is
+the source of truth for Ubuntu. Keep them in sync by hand.
 
 ## Troubleshooting
 
-### Shortcuts Not Working After Restore
+**Shortcuts not working after restore:** restart KWin (`kwin_wayland --replace &`)
+or log out and back in. Ensure you have 5 virtual desktops
+(System Settings → Workspace Behavior → Virtual Desktops).
 
-1. **Restart KWin:**
-   ```bash
-   kwin_x11 --replace &  # or kwin_wayland --replace &
-   ```
-
-2. **Log out and log back in**
-   This ensures all KDE services reload the configurations
-
-3. **Check Desktop Count:**
-   - System Settings -> Workspace Behavior -> Virtual Desktops
-   - Ensure you have at least 5 desktops configured
-   - Desktop switching shortcuts only work with multiple desktops
-
-4. **Verify Configuration Load:**
-   ```bash
-   # Check if configs exist and are readable
-   ls -lh ~/.config/kglobalshortcutsrc
-   ls -lh ~/.config/khotkeysrc
-   ls -lh ~/.config/kwinrc
-   ```
-
-### Conflicts with Other Shortcuts
-
-If shortcuts don't work, they might conflict with:
-- Application-specific shortcuts
-- System-wide shortcuts
-- Desktop environment defaults
-
-Check System Settings -> Shortcuts for conflicts (highlighted in yellow/red).
-
-### Permission Issues
-
-If you get permission errors:
-```bash
-chmod 600 ~/.config/kglobalshortcutsrc
-chmod 600 ~/.config/khotkeysrc
-chmod 600 ~/.config/kwinrc
-```
-
-## Additional KDE Configurations
-
-Consider adding these to your dotfiles:
-- `~/.config/plasma-org.kde.plasma.desktop-appletsrc` - Plasma panel/widget layout
-- `~/.config/kdeglobals` - Global KDE theme settings
-- `~/.config/konsolerc` - Konsole terminal settings
-- `~/.config/dolphinrc` - Dolphin file manager settings
+**Conflicts:** System Settings → Shortcuts highlights conflicting bindings.

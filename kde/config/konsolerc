@@ -1,0 +1,12 @@
+
+[Desktop Entry]
+DefaultProfile=Maaru Terminal Profile.profile
+
+[General]
+ConfigVersion=1
+
+[MainWindow]
+MenuBar=Disabled
+
+[UiSettings]
+ColorScheme=MateriaDark
