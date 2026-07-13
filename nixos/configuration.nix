@@ -82,7 +82,11 @@
   users.users."hardik" = {
     isNormalUser = true;
     description = "hardik";
-    extraGroups = [ "networkmanager" "wheel" ];
+    # NOTE: "docker" is effectively root — a member can bind-mount the host
+    # filesystem into a privileged container and escalate. This is inherent to
+    # the Docker daemon socket on any distro, not a NixOS quirk. It is the
+    # standard setup and is what kind requires.
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
       kdePackages.kate
     #  thunderbird
@@ -96,6 +100,23 @@
   programs.zsh.enable = true;
 
   users.users.hardik.shell = pkgs.zsh;
+
+  # Docker engine (the OSS daemon — not Docker Desktop, which isn't packaged
+  # for NixOS anyway). Rootful: kind wants privileged containers and native
+  # bridge networking, and rootless docker + kind needs cgroup-delegation
+  # wrangling that is known to be flaky on NixOS.
+  virtualisation.docker.enable = true;
+
+  # kind's default inotify limits are too low for multi-node clusters and pods
+  # fail with "too many open files". See kind's Known Issues.
+  boot.kernel.sysctl = {
+    "fs.inotify.max_user_watches" = 524288;
+    "fs.inotify.max_user_instances" = 512;
+  };
+
+  # Java. This installs the JDK *and* sets JAVA_HOME, which merely putting the
+  # package in systemPackages would not do. `jdk` is currently JDK 21 (LTS).
+  programs.java.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -122,7 +143,24 @@
     # bindings are dead keys (KDE resolves them by .desktop file name).
     kdePackages.konsole    # Meta+T
     kdePackages.spectacle  # Meta+Shift+R
-    slack                  # Meta+S
+    slack                  # Meta+S  (unfree; needs allowUnfree above)
+
+    # Kubernetes
+    kubectl
+    k9s
+    kind          # spins clusters up in Docker; needs virtualisation.docker
+    freelens-bin  # NB: the attribute is freelens-bin, not freelens.
+                  # This replaces OpenLens, which was removed from nixpkgs --
+                  # Mirantis pulled Lens's source in 2023 so it could no longer
+                  # be rebuilt, and the project is deprecated. FreeLens is the
+                  # community fork that succeeded it (MIT).
+
+    # Database
+    dbeaver-bin   # NB: the attribute is dbeaver-bin. Plain `dbeaver` does not
+                  # exist and has no alias, so it is a hard eval error.
+
+    # Media
+    mpv
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

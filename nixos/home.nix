@@ -9,7 +9,13 @@
 
   home.packages = with pkgs; [
     go
-    nodejs_22
+    # Latest Node LTS. Node 24 (Krypton) is the current Active LTS until
+    # 2027-06; 22 dropped to Maintenance. Pinned explicitly rather than using
+    # the bare `nodejs` alias, which will drift to 26 when that goes LTS.
+    # nvm/fnm are deliberately absent: they download prebuilt binaries that
+    # expect /lib64/ld-linux, which NixOS does not have. For per-project
+    # versions use a devshell pinning nodejs_20 / nodejs_22 / etc.
+    nodejs_24
     xclip
     claude-code
     git

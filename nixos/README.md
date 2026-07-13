@@ -33,8 +33,37 @@ The launcher shortcuts (`Meta+T` Konsole, `Meta+S` Slack, `Meta+Shift+R`
 Spectacle) resolve by `.desktop` file name, so `configuration.nix` installs
 those packages — without them the keys silently do nothing.
 
+## Dev tooling
+
+Docker, Kubernetes, Java and DBeaver are configured in `configuration.nix`.
+Three of these are not what you'd naively guess:
+
+- **`dbeaver-bin`**, not `dbeaver`. The plain attribute doesn't exist and has
+  no alias, so `pkgs.dbeaver` is a hard eval error.
+- **`freelens-bin`**, not `openlens`. OpenLens was removed from nixpkgs —
+  Mirantis pulled Lens's source in 2023, so it could no longer be rebuilt and
+  the project is deprecated. [FreeLens](https://github.com/freelensapp/freelens)
+  is the community fork that succeeded it (MIT).
+- **No `nvm`.** It cannot work on NixOS: it downloads prebuilt Node binaries
+  that expect a dynamic linker at `/lib64/ld-linux-x86-64.so.2`, which NixOS
+  does not have. (`fnm` has the same problem — it's also just a downloader of
+  upstream binaries.) `home.nix` pins `nodejs_24`, the current Active LTS.
+  For per-project versions, use a devshell pinning `nodejs_20`/`nodejs_22`.
+
+Docker is **rootful** (`virtualisation.docker.enable`), and `hardik` is in the
+`docker` group. Be aware that group membership is **effectively root** — a
+member can bind-mount the host filesystem into a privileged container. That's
+inherent to the Docker socket on any distro, and it's what `kind` needs;
+rootless Docker + kind requires cgroup-delegation work that is known to be
+flaky on NixOS.
+
+`programs.java.enable` is used rather than dropping the JDK into
+`systemPackages`, because it also sets `JAVA_HOME`.
+
 ## Usage
 
 ```bash
 sudo nixos-rebuild switch --flake .#nixos
 ```
+
+Docker group membership needs a logout/login (or reboot) to take effect.
