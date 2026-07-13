@@ -54,6 +54,22 @@ Three of these are not what you'd naively guess:
   upstream binaries.) `home.nix` pins `nodejs_24`, the current Active LTS.
   For per-project versions, use a devshell pinning `nodejs_20`/`nodejs_22`.
 
+### Flatpak
+
+`services.flatpak.enable` is on, as an escape hatch for apps nixpkgs doesn't
+carry or has dropped (OpenLens, for one, is still on Flathub). Two caveats:
+
+- **No remote is configured.** The module gives you the `flatpak` command but
+  nothing to install from. Add Flathub once, by hand, after the first rebuild:
+  ```bash
+  flatpak remote-add --if-not-exists flathub \
+    https://flathub.org/repo/flathub.flatpakrepo
+  ```
+- **Anything installed via Flatpak is outside Nix** — not declared by this
+  flake, not rolled back by `nixos-rebuild`. Prefer nixpkgs where possible.
+
+### Docker
+
 Docker is **rootful** (`virtualisation.docker.enable`), and `hardik` is in the
 `docker` group. Be aware that group membership is **effectively root** — a
 member can bind-mount the host filesystem into a privileged container. That's

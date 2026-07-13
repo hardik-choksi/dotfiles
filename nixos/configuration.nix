@@ -118,6 +118,20 @@
   # package in systemPackages would not do. `jdk` is currently JDK 21 (LTS).
   programs.java.enable = true;
 
+  # Flatpak, as an escape hatch for apps nixpkgs doesn't carry (or has dropped
+  # -- OpenLens, for instance, is still on Flathub). The module asserts that
+  # xdg.portal.enable is true; plasma6 already sets it, so nothing to add.
+  #
+  # It does NOT configure any remote, so after the first rebuild you must add
+  # Flathub once, imperatively:
+  #
+  #   flatpak remote-add --if-not-exists flathub \
+  #     https://flathub.org/repo/flathub.flatpakrepo
+  #
+  # Anything installed this way lives outside Nix: not declared by this flake,
+  # not rolled back by nixos-rebuild.
+  services.flatpak.enable = true;
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
