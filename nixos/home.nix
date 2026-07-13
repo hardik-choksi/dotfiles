@@ -21,6 +21,7 @@
     git
     zellij
     fzf
+    lazydocker  # the `lzd` shell alias below points at this
   ];
 
   home.sessionVariables = {
