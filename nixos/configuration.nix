@@ -173,6 +173,9 @@
     dbeaver-bin   # NB: the attribute is dbeaver-bin. Plain `dbeaver` does not
                   # exist and has no alias, so it is a hard eval error.
 
+    # API
+    postman       # unfree; needs allowUnfree above
+
     # Media
     mpv
     stremio-linux-shell  # NB: the attribute is stremio-linux-shell, and the
