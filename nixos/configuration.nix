@@ -212,7 +212,30 @@
     gnumake
     pkg-config
 
+    # ELF / binary analysis
+    binutils   # readelf, objdump, nm, strings, ar, ld
+    elfutils   # the eu-* variants: eu-readelf, eu-objdump, eu-stack
+    patchelf   # rewrite ELF interpreter/RPATH -- the standard NixOS fix for
+               # running foreign prebuilt binaries
+    gdb
+    ltrace
+    strace
+    radare2
+    pahole     # struct layout from DWARF
+    file
+    hexyl      # quick hex dumps (xxd itself comes with vim, already enabled)
+    (callPackage ./pkgs/dz6.nix { })  # vim-like TUI hex editor; not in
+                                      # nixpkgs, built from crates.io.
+                                      # NOTE: its hashes are placeholders --
+                                      # see the comment in pkgs/dz6.nix.
+
+    # Android
+    android-tools  # adb + fastboot. NB: there is no `fastboot` attribute.
+
     # CLI
+    curl        # NOT in NixOS's default system path, despite being on every
+                # other distro. Genuinely absent unless declared.
+    openssh     # ssh, scp, ssh-keygen
     ripgrep
     gh
     jq
