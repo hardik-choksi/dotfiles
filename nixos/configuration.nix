@@ -86,7 +86,7 @@
     # filesystem into a privileged container and escalate. This is inherent to
     # the Docker daemon socket on any distro, not a NixOS quirk. It is the
     # standard setup and is what kind requires.
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "pcap" ];
     packages = with pkgs; [
       kdePackages.kate
     #  thunderbird
@@ -117,6 +117,19 @@
   # Java. This installs the JDK *and* sets JAVA_HOME, which merely putting the
   # package in systemPackages would not do. `jdk` is currently JDK 21 (LTS).
   programs.java.enable = true;
+
+  # Let tcpdump capture without sudo. Packet capture needs CAP_NET_RAW, so on
+  # NixOS the binary must be wrapped -- otherwise every capture needs root.
+  # Gated on the "pcap" group so this isn't granted system-wide. Same idiom
+  # NixOS's own wireshark module uses for dumpcap.
+  users.groups.pcap = { };
+  security.wrappers.tcpdump = {
+    source = "${pkgs.tcpdump}/bin/tcpdump";
+    capabilities = "cap_net_raw,cap_net_admin+eip";
+    owner = "root";
+    group = "pcap";
+    permissions = "u+rx,g+x";
+  };
 
   # `vi` is muscle memory, but nixpkgs' vim provides only a `vim` binary --
   # there is no `vi`, so it would be command-not-found. Alias it, and make vim
@@ -218,9 +231,13 @@
     iputils       # ping
     iproute2      # ip, ss
     traceroute
+    tcpdump
     mtr
     whois
     socat
+    ethtool
+    netcat-openbsd  # the default path's `netcat` is the libressl one; this is
+                    # the OpenBSD nc most people mean.
 
     # Media
     mpv
