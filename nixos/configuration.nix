@@ -205,6 +205,9 @@
 
     # Editors
     vscode        # unfree; needs allowUnfree above
+    code-cursor   # NB: the attribute is code-cursor, not `cursor` (which does
+                  # not exist and has no alias). The binary is still `cursor`.
+                  # Unfree; needs allowUnfree above.
 
     # Build toolchain. NixOS ships no compiler by default -- if you build
     # anything outside a devshell you need these explicitly.
