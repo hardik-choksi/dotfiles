@@ -105,8 +105,6 @@ ForegroundVisited=124,183,255
 
 [General]
 AccentColor=104,107,111
-BrowserApplication=google-chrome.desktop
-ColorSchemeHash=4e0a5e6572e544aa6d5eaf59b52ddc29e96cb7eb
 LastUsedCustomAccentColor=104,107,111
 TerminalApplication=alacritty
 TerminalService=Alacritty.desktop
@@ -115,12 +113,6 @@ font=Iosevka Nerd Font,13,-1,5,600,0,0,0,0,0,0,0,0,0,0,1,SemiBold
 menuFont=Iosevka Nerd Font,13,-1,5,600,0,0,0,0,0,0,0,0,0,0,1,SemiBold
 smallestReadableFont=Iosevka Nerd Font,11,-1,5,600,0,0,0,0,0,0,0,0,0,0,1,SemiBold
 toolBarFont=Iosevka Nerd Font,13,-1,5,600,0,0,0,0,0,0,0,0,0,0,1,SemiBold
-
-[Icons]
-Theme=YAMIS
-
-[KDE]
-LookAndFeelPackage=Andromeda
 
 [KFileDialog Settings]
 Allow Expansion=false

@@ -58,9 +58,20 @@ awk '
 ' "$SOURCE_DIR/kwinrc" | cat -s > "$CONFIG_DIR/kwinrc"
 echo "  kwinrc            (tiling UUIDs stripped)"
 
-# Fonts, colour scheme, look-and-feel.
-cp "$SOURCE_DIR/kdeglobals" "$CONFIG_DIR/kdeglobals"
-echo "  kdeglobals"
+# kdeglobals: keep the fonts, accent colour and colour values, but drop names
+# that point at hand-installed themes (Andromeda, YAMIS, the colour-scheme
+# hash). Those live only in ~/.local/share, so on any other machine the names
+# resolve to nothing and KDE silently falls back to Breeze -- carrying them
+# around just implies a look the config can't actually deliver.
+grep -vE '^(LookAndFeelPackage|ColorSchemeHash|BrowserApplication)=' \
+    "$SOURCE_DIR/kdeglobals" \
+  | awk '
+      /^\[Icons\]$/ { skip=1; next }   # sole content is Theme=<hand-installed>
+      /^\[KDE\]$/    { skip=1; next }   # sole content is LookAndFeelPackage
+      /^\[/          { skip=0 }
+      !skip
+    ' | cat -s > "$CONFIG_DIR/kdeglobals"
+echo "  kdeglobals        (theme names stripped)"
 
 # konsolerc: drop window geometry and the serialized State blob.
 awk '
