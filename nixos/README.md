@@ -1,8 +1,12 @@
 # NixOS Configuration
 
-Snapshot of `~/nixos-config`, which also lives in its own repo at
-`github.com:vyasn30/nixos-config`. **That repo is the source of truth** — this
-is a copy for convenience, and the two will drift unless you sync them by hand.
+This directory is the source of truth. (It began as a copy of a `nixos-config`
+repo that turned out not to be ours; that remote has been severed.)
+
+Verified: the whole config evaluates cleanly — `nix build
+.#nixosConfigurations.nixos.config.system.build.toplevel --dry-run` exits 0, so
+every module option and package attribute resolves. It has not been *booted*,
+only evaluated.
 
 ## Files
 
@@ -12,7 +16,23 @@ is a copy for convenience, and the two will drift unless you sync them by hand.
 | `configuration.nix` | System: KDE Plasma 6, SDDM, pipewire, packages, user |
 | `home.nix` | home-manager: zsh + p10k, shell aliases, dev packages |
 | `plasma.nix` | KDE config via plasma-manager (see below) |
-| `hardware-configuration.nix` | **Machine-generated.** Contains disk UUIDs for one specific machine — regenerate with `nixos-generate-config` on a new box, do not reuse. |
+| `hardware-configuration.nix` | **Machine-generated — do not reuse.** See below. |
+
+## ⚠️ Regenerate `hardware-configuration.nix` first
+
+The `hardware-configuration.nix` committed here describes **a different
+machine** — it carries that box's disk UUIDs and kernel modules. Using it as-is
+on a new install will not boot.
+
+Before the first rebuild on any new machine:
+
+```bash
+sudo nixos-generate-config --show-hardware-config > hardware-configuration.nix
+```
+
+Nothing else in the config is machine-specific, so this is the only file you
+need to touch. (The evaluation above was done against a stub hardware config,
+which is why regenerating it doesn't invalidate that result.)
 
 ## KDE
 
@@ -94,10 +114,34 @@ flaky on NixOS.
 `programs.java.enable` is used rather than dropping the JDK into
 `systemPackages`, because it also sets `JAVA_HOME`.
 
-## Usage
+## Usage — installing on a new machine
 
 ```bash
+git clone git@github.com:hardik-choksi/dotfiles.git ~/dotfiles
+cp -r ~/dotfiles/nixos ~/nixos-config && cd ~/nixos-config
+
+# 1. REQUIRED. The committed hardware-configuration.nix is for another
+#    machine; without this the system will not boot.
+sudo nixos-generate-config --show-hardware-config > hardware-configuration.nix
+
+# 2. Build.
 sudo nixos-rebuild switch --flake .#nixos
 ```
 
-Docker group membership needs a logout/login (or reboot) to take effect.
+Then:
+
+- **Log out and back in.** The `docker` and `pcap` group memberships don't
+  apply to an already-running session.
+- Optionally add the Flathub remote (see the Flatpak section above).
+
+Expect the first build to pull a lot: VS Code, Cursor, Postman, DBeaver,
+FreeLens, Stremio and the full KDE stack are all sizeable.
+
+### Checking changes before you rebuild
+
+```bash
+nix build .#nixosConfigurations.nixos.config.system.build.toplevel --dry-run
+```
+
+Evaluates every option and package without downloading or compiling anything.
+Catches typo'd options and nonexistent attributes in seconds.
