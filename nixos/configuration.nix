@@ -227,10 +227,8 @@
     pahole     # struct layout from DWARF
     file
     hexyl      # quick hex dumps (xxd itself comes with vim, already enabled)
-    (callPackage ./pkgs/dz6.nix { })  # vim-like TUI hex editor; not in
-                                      # nixpkgs, built from crates.io.
-                                      # NOTE: its hashes are placeholders --
-                                      # see the comment in pkgs/dz6.nix.
+               # dz6 (the TUI hex editor) is not in nixpkgs and is installed
+               # by hand via `cargo install dz6`.
 
     # Android
     android-tools  # adb + fastboot. NB: there is no `fastboot` attribute.

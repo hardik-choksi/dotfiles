@@ -54,23 +54,19 @@ Three of these are not what you'd naively guess:
   upstream binaries.) `home.nix` pins `nodejs_24`, the current Active LTS.
   For per-project versions, use a devshell pinning `nodejs_20`/`nodejs_22`.
 
-### dz6 (hex editor) — needs two hashes filled in on first build
+### dz6 (hex editor) — installed by hand
 
-`dz6` isn't in nixpkgs, so `pkgs/dz6.nix` builds it from crates.io. Its `hash`
-and `cargoHash` are **placeholders** (`lib.fakeHash`) — they can't be computed
-without running Nix, and this config was authored on a machine without it.
+`dz6` isn't in nixpkgs, and is installed imperatively rather than declared here:
 
-The first `nixos-rebuild` will fail twice with a hash mismatch, each time
-printing the correct value. Paste each into `pkgs/dz6.nix` and re-run:
-
-```
-error: hash mismatch in fixed-output derivation ...
-         specified: sha256-AAAA...
-            got:    sha256-9Xk2...   <- paste this one in
+```bash
+cargo install dz6
 ```
 
-Fix `hash` first, rebuild, then `cargoHash`. Or drop the package from
-`configuration.nix` if you'd rather not bother.
+It lands in `~/.cargo/bin`. Note that a cargo-built binary works on NixOS only
+because cargo compiles it against the Nix-provided toolchain — unlike a
+*prebuilt* binary, which would fail on the missing `/lib64/ld-linux` (the same
+reason `nvm` can't work here). If you ever want it declared, it's on crates.io
+and `rustPlatform.buildRustPackage` + `fetchCrate` would do it.
 
 ### Flatpak
 
