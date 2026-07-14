@@ -271,6 +271,9 @@
                          # webengine) and is now a `throw`, which points here.
                          # It bundles the streaming server; there is no
                          # separate service to enable.
+
+    # Disk utilities
+    balena-etcher  # unfree; needs allowUnfree above
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

@@ -91,7 +91,7 @@ fpath+=${ZDOTDIR:-~}/.zsh_functions
 #----------------------------------------------------------------------------
 # Aliases
 # ---------------------------------------------------------------------------
-alias 'lz=lazydocker'
+alias 'lzd=lazydocker'
 alias 'mw=cd ~/work/mw'
 alias 'bf=code ~/work/mw/middleware/bifrost'
 alias 'cbf=cursor ~/work/mw/middleware/bifrost'
