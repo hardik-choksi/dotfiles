@@ -181,6 +181,8 @@
     go
     fastfetch
     brave
+    kdePackages.kcalc  # calculator -- NOT a plasma6 default, unlike konsole/
+                       # spectacle/kate/okular/dolphin/ark/gwenview/elisa.
 
     # Targets of the Plasma shortcuts in plasma.nix. konsole (Meta+T) and
     # spectacle (Meta+Shift+R) are NOT listed here: the plasma6 module already
