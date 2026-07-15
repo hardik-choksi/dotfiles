@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 # KDE Plasma configuration, ported from ~/dotfiles/kde.
 #
@@ -8,13 +8,154 @@
 #     The app launchers are in shortcuts."services/<app>.desktop" below.
 #   - kwinrc [Tiling][<uuid>] blocks: keyed by per-machine desktop/screen
 #     UUIDs, meaningless on a different host. Re-draw tiles with Meta+T.
-#   - Appearance. The Ubuntu box's look (Andromeda look-and-feel, YAMIS icons,
-#     MateriaDark colours, Apple-Aurora window decorations, the Aura Glow
-#     effect) is hand-installed under ~/.local/share and is not packaged in
-#     nixpkgs, so this box gets stock Breeze. Theme it by hand if you want it.
+#   - The "Aura Glow" KWin effect (Schneegans' Burn-My-Windows). It's a KWin
+#     scripted effect, and plasma-manager has no option to enable third-party
+#     KWin effects (they need kpackagetool6 registration, not just a file in
+#     an XDG path). Left hand-installed.
+#
+# The rest of the Ubuntu look IS reproduced below -- see the `let` block, which
+# packages the three themes that aren't in nixpkgs, and workspace.* / the
+# window-decoration config, which SELECT them. MateriaDark's colours come from
+# the packaged `materia-kde-theme`.
+let
+  # Andromeda global look-and-feel (github.com/EliverLara/Andromeda-kde).
+  # Pure QML/SVG/ini data -- no build, just copy the trees KDE looks for into
+  # $out/share. Pinned to a commit so the hash is stable.
+  andromeda-kde = pkgs.stdenvNoCC.mkDerivation {
+    pname = "andromeda-kde";
+    version = "0-unstable-2025-01-14";
+    src = pkgs.fetchFromGitHub {
+      owner = "EliverLara";
+      repo = "Andromeda-kde";
+      rev = "c97ba4265fe7c1e7b8d67437d1b807cefb80775d";
+      hash = "sha256-+OGtEjTCo++JUTUY3Hiplc/KlKxeMOEmETcQlvjTWa8=";
+    };
+    dontConfigure = true;
+    dontBuild = true;
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out/share/plasma $out/share/aurorae/themes $out/share/color-schemes
+      cp -r plasma/look-and-feel $out/share/plasma/
+      cp -r plasma/desktoptheme  $out/share/plasma/
+      cp -r aurorae/Andromeda    $out/share/aurorae/themes/
+      cp -r color-schemes/.      $out/share/color-schemes/
+      runHook postInstall
+    '';
+  };
+
+  # YAMIS icon theme (github.com/googIyEYES/YAMIS): a single tarball that
+  # extracts to a top-level YAMIS/ dir. Monochrome set -- it defines only some
+  # icons and Inherits=Papirus-Dark for the rest, so papirus-icon-theme must
+  # also be installed (see home.packages selection note below) or icons fall
+  # back to broken.
+  yamis-icons = pkgs.stdenvNoCC.mkDerivation {
+    pname = "yamis-icon-theme";
+    version = "0-unstable-2026-02-06";
+    src = pkgs.fetchFromGitHub {
+      owner = "googIyEYES";
+      repo = "YAMIS";
+      rev = "24c02f6bb7bcd356e49df22f6942b078b66700fd";
+      hash = "sha256-KZXG5XYHhUfgDrxOXT1mS+vbmH9l0uEzfdvOo1+r1TQ=";
+    };
+    dontConfigure = true;
+    dontBuild = true;
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out/share/icons
+      tar -xf monochrome-icon-theme.tar.gz -C $out/share/icons
+      runHook postInstall
+    '';
+  };
+
+in
 {
+  # Make the theme packages discoverable by Plasma. home-manager adds this
+  # profile's share/ to XDG_DATA_DIRS, so KDE finds the look-and-feel, icons
+  # and colour schemes installed here.
+  #   - andromeda-kde: provides the look-and-feel, its plasma desktoptheme AND
+  #     its own Andromeda colour scheme (so no separate colours package needed).
+  #   - papirus-icon-theme: YAMIS inherits from Papirus-Dark for icons it doesn't
+  #     define itself; without it the monochrome set has gaps.
+  home.packages = [
+    andromeda-kde
+    yamis-icons
+    pkgs.papirus-icon-theme
+  ];
+
   programs.plasma = {
     enable = true;
+
+    # Appearance selection -- activate the themes packaged in the let block.
+    workspace = {
+      lookAndFeel = "Andromeda";       # KPlugin Id from its metadata.json
+      colorScheme = "Andromeda";       # Andromeda ships its own scheme (its
+                                       # color-schemes/Andromeda.colors)
+      iconTheme = "YAMIS";             # the folder name KDE keys on
+      # Window decoration is deliberately NOT set here: the Andromeda
+      # look-and-feel carries its own deco, and plasma-manager warns that
+      # setting both fights the LnF. We let Andromeda own the titlebars.
+    };
+
+    # Bottom panel (taskbar), transcribed by hand from the Ubuntu box's
+    # plasma-org.kde.plasma.desktop-appletsrc -- rc2nix cannot capture panels,
+    # so this is the source of truth. Widget order matches the live
+    # AppletOrder=370;372;398;396;373;400;395;374;389;399;390.
+    #
+    # NB: plasma-manager rebuilds panels by running a plasmashell script on
+    # activation (delete-all + recreate), so on first apply you may see a
+    # transient KDE crash-handler popup -- harmless, the panel still builds.
+    # The four systemMonitor widgets use the generic { name; config; } form:
+    # their titles + chart faces are set here, but fine sensor/colour details
+    # may need a one-time tweak in the widget's settings after first rebuild.
+    panels = [
+      {
+        location = "bottom";
+        widgets = [
+          "org.kde.plasma.kickoff"        # 370  app launcher
+          "org.kde.plasma.icontasks"      # 372  task manager
+          # 398  Network Speed (line chart)
+          {
+            name = "org.kde.plasma.systemmonitor.net";
+            config.Appearance = {
+              title = "Network Speed";
+              chartFace = "org.kde.ksysguard.linechart";
+            };
+          }
+          # 396  Memory Usage (pie chart)
+          {
+            name = "org.kde.plasma.systemmonitor.memory";
+            config.Appearance = {
+              title = "Memory Usage";
+              chartFace = "org.kde.ksysguard.piechart";
+            };
+          }
+          "org.kde.plasma.marginsseparator"  # 373  spacer
+          # 400  Swap Usage (pie chart)
+          {
+            name = "org.kde.plasma.systemmonitor";
+            config.Appearance = {
+              title = "Swap Usage";
+              chartFace = "org.kde.ksysguard.piechart";
+            };
+          }
+          # 395  Individual Core Usage (bar chart)
+          {
+            name = "org.kde.plasma.systemmonitor.cpucore";
+            config.Appearance = {
+              title = "Individual Core Usage";
+              chartFace = "org.kde.ksysguard.barchart";
+            };
+          }
+          "org.kde.plasma.systemtray"     # 374  system tray
+          # 389  clock, 24-hour
+          {
+            digitalClock.time.format = "24h";
+          }
+          "org.kde.plasma.notes"          # 399  sticky note
+          "org.kde.plasma.showdesktop"    # 390  show-desktop button
+        ];
+      }
+    ];
 
     shortcuts = {
       kwin = {

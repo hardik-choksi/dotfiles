@@ -38,14 +38,51 @@ config, so it stays valid regardless of which machine's scan is committed.)
 
 `plasma.nix` reproduces the KDE setup from `../kde` (the Ubuntu box)
 declaratively via [plasma-manager](https://github.com/nix-community/plasma-manager):
-shortcuts, 5 virtual desktops, KWin effects, night light, fonts, Konsole profile.
+shortcuts, 5 virtual desktops, KWin effects, night light, fonts, Konsole
+profile, **appearance (theme + icons)** and the **bottom panel/taskbar**.
 
-Two things deliberately do **not** carry over:
+### Appearance — now declarative
 
-- **Appearance.** The Ubuntu look (Andromeda look-and-feel, YAMIS icons,
-  MateriaDark colours, Apple-Aurora decorations, Aura Glow effect) is
-  hand-installed under `~/.local/share` and is not in nixpkgs. NixOS comes up
-  with stock Breeze; theme it by hand if you want the same look.
+The Ubuntu look IS reproduced (it used to be "theme it by hand"; that's no
+longer true). None of these themes are in nixpkgs, so `plasma.nix` packages the
+two that aren't with small inline `stdenvNoCC.mkDerivation`s (in its `let`
+block) and then *selects* them via `programs.plasma.workspace`:
+
+- **Andromeda** global look-and-feel — a pure QML/SVG/ini data package
+  ([EliverLara/Andromeda-kde](https://github.com/EliverLara/Andromeda-kde),
+  pinned to a commit). It also ships **its own colour scheme** (`Andromeda`) and
+  its **Plasma desktop style** (the panel/tray/widget styling), so no separate
+  colours or plasma-style package is needed. Selected with
+  `workspace.lookAndFeel` + `workspace.colorScheme`.
+- **YAMIS** monochrome icons ([googIyEYES/YAMIS](https://github.com/googIyEYES/YAMIS)).
+  It's a *monochrome* set that only defines some icons and
+  `Inherits=Papirus-Dark` for the rest, so **`papirus-icon-theme` is installed
+  as its base** — without it the set has gaps. Selected with
+  `workspace.iconTheme = "YAMIS"`.
+- **Window decoration** is left to Andromeda (its look-and-feel carries its own
+  deco; plasma-manager warns against setting both, so we don't).
+- **Aura Glow** (the Burn-My-Windows KWin effect) is the one piece NOT carried
+  over: it's a KWin scripted effect and plasma-manager has no option to enable
+  third-party KWin effects. Install it by hand if you want it.
+
+home-manager puts the profile's `share/` on `XDG_DATA_DIRS`, which is how Plasma
+finds the packaged look-and-feel / icons / colour scheme.
+
+### Panel / taskbar
+
+The bottom panel is declared in `programs.plasma.panels` — kickoff, icon-tasks,
+four system-monitor widgets (net/memory/swap/cpu), a separator, system tray, a
+24-hour clock, notes and a show-desktop button, in the same order as the Ubuntu
+box. It was **hand-transcribed** from `plasma-org.kde.plasma.desktop-appletsrc`:
+`rc2nix` cannot capture panels, so there is no automated path. Two caveats:
+plasma-manager applies panels by running a plasmashell script (delete-all +
+recreate) on activation, so the first apply may flash a harmless KDE
+crash-handler popup; and the system-monitor widgets' fine sensor/colour config
+is best-effort — titles and chart types are set, but you may need a one-time
+tweak in a widget's settings after the first rebuild.
+
+### Not carried over
+
 - **Tiling layouts.** Keyed by per-machine desktop/screen UUIDs. Re-draw with
   `Meta+T`.
 
