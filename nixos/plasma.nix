@@ -198,7 +198,7 @@ in
       };
 
       # Application launchers
-      "services/org.kde.konsole.desktop"."_launch" = "Meta+T";
+      "services/org.kde.konsole.desktop"."_launch" = "Ctrl+Alt+T";
       "services/org.kde.krunner.desktop"."_launch" = [ "Meta+R" "Alt+Space" ];
       "services/slack.desktop"."_launch" = "Meta+S";
       "services/org.kde.spectacle.desktop"."RecordRegion" = "Meta+Shift+R";
@@ -261,9 +261,9 @@ in
         name = "IosevkaTerm Nerd Font Mono";
         size = 12;
       };
-      # The Ubuntu box used a hand-installed "kubuntu-black" scheme, which is
-      # not packaged. Breeze is the closest stock dark scheme.
-      colorScheme = "Breeze";
+      # "White on Black" — Konsole's built-in scheme
+      # (WhiteOnBlack.colorscheme), referenced by its filename stem.
+      colorScheme = "WhiteOnBlack";
       extraConfig."Appearance".BoldIntense = "false";
     };
   };
