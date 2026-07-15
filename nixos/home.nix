@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, antigravity-nix, ... }:
 
 {
   imports = [ ./plasma.nix ];
@@ -18,10 +18,12 @@
     nodejs_24
     xclip
     claude-code
+    antigravity-nix.packages.${pkgs.system}.google-antigravity-cli
     git
     zellij
     fzf
     lazydocker  # the `lzd` shell alias below points at this
+    nil
   ];
 
   home.sessionVariables = {

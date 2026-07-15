@@ -43,6 +43,19 @@
         "Show Desktop" = "Meta+D";
       };
 
+      ksmserver = {
+        "Lock Session" = [ "Screensaver" ]; # Unbind Meta+L so kwin can use it
+      };
+
+      plasmashell = {
+        # Unbind Meta+1..5 from task manager to allow kwin desktop switching
+        "activate task manager entry 1" = [];
+        "activate task manager entry 2" = [];
+        "activate task manager entry 3" = [];
+        "activate task manager entry 4" = [];
+        "activate task manager entry 5" = [];
+      };
+
       # Application launchers
       "services/org.kde.konsole.desktop"."_launch" = "Meta+T";
       "services/org.kde.krunner.desktop"."_launch" = [ "Meta+R" "Alt+Space" ];

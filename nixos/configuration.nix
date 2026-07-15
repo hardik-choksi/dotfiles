@@ -45,6 +45,7 @@
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
   services.xserver.enable = true;
+  services.xserver.desktopManager.xterm.enable = false;
 
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
@@ -101,6 +102,9 @@
 
   users.users.hardik.shell = pkgs.zsh;
 
+  # Enable nix-ld to run standard Linux binaries
+  programs.nix-ld.enable = true;
+
   # Docker engine (the OSS daemon — not Docker Desktop, which isn't packaged
   # for NixOS anyway). Rootful: kind wants privileged containers and native
   # bridge networking, and rootless docker + kind needs cgroup-delegation
@@ -138,7 +142,10 @@
     enable = true;
     defaultEditor = true;
   };
-  environment.shellAliases.vi = "vim";
+  environment.shellAliases = {
+    vi = "vim";
+    zed = "zeditor";
+  };
 
   # Flatpak, as an escape hatch for apps nixpkgs doesn't carry (or has dropped
   # -- OpenLens, for instance, is still on Flathub). The module asserts that
@@ -170,7 +177,6 @@
     # `vi` alias), so it is not repeated here.
     wget
     keepassxc
-    alacritty
     pkgs.zed-editor
     go
     fastfetch
@@ -273,7 +279,7 @@
                          # separate service to enable.
 
     # Disk utilities
-    balena-etcher  # unfree; needs allowUnfree above
+    # balena-etcher  # unfree; needs allowUnfree above
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -303,4 +309,6 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "26.05"; # Did you read the comment?
 
+  # Enable the experimental Flakes feature permanently
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 }
