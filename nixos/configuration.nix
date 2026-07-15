@@ -272,6 +272,9 @@
     netcat-openbsd  # the default path's `netcat` is the libressl one; this is
                     # the OpenBSD nc most people mean.
 
+    # Notes
+    obsidian      # Markdown knowledge base. Unfree; needs allowUnfree above.
+
     # Media
     mpv
     stremio-linux-shell  # NB: the attribute is stremio-linux-shell, and the
