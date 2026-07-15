@@ -3,36 +3,36 @@
 This directory is the source of truth. (It began as a copy of a `nixos-config`
 repo that turned out not to be ours; that remote has been severed.)
 
-Verified: the whole config evaluates cleanly — `nix build
-.#nixosConfigurations.nixos.config.system.build.toplevel --dry-run` exits 0, so
-every module option and package attribute resolves. It has not been *booted*,
-only evaluated.
+This config is **live** — it is booted and running on an Acer Swift Go 14
+(Intel i5). The committed `hardware-configuration.nix` is that machine's real
+hardware scan. The package/option set is also verified to evaluate cleanly:
+`nix build .#nixosConfigurations.nixos.config.system.build.toplevel --dry-run`
+exits 0, so every module option and package attribute resolves.
 
 ## Files
 
 | File | Contents |
 |------|----------|
-| `flake.nix` | Inputs: nixpkgs, home-manager, plasma-manager |
+| `flake.nix` | Inputs: nixpkgs, home-manager, plasma-manager, antigravity-nix |
 | `configuration.nix` | System: KDE Plasma 6, SDDM, pipewire, packages, user |
 | `home.nix` | home-manager: zsh + p10k, shell aliases, dev packages |
 | `plasma.nix` | KDE config via plasma-manager (see below) |
-| `hardware-configuration.nix` | **Machine-generated — do not reuse.** See below. |
+| `hardware-configuration.nix` | **The Acer's scan. Regenerate on any other machine.** See below. |
 
-## ⚠️ Regenerate `hardware-configuration.nix` first
+## ⚠️ Regenerate `hardware-configuration.nix` on a different machine
 
-The `hardware-configuration.nix` committed here describes **a different
-machine** — it carries that box's disk UUIDs and kernel modules. Using it as-is
-on a new install will not boot.
-
-Before the first rebuild on any new machine:
+The committed `hardware-configuration.nix` is the Acer Swift Go 14's real scan —
+its disk UUIDs, swap device and kernel modules. It is correct for *that* box and
+wrong for any other. To reuse this config on a **new** machine, regenerate it
+first, or the system will not boot:
 
 ```bash
 sudo nixos-generate-config --show-hardware-config > hardware-configuration.nix
 ```
 
 Nothing else in the config is machine-specific, so this is the only file you
-need to touch. (The evaluation above was done against a stub hardware config,
-which is why regenerating it doesn't invalidate that result.)
+need to touch. (The `--dry-run` evaluation is done against a stub hardware
+config, so it stays valid regardless of which machine's scan is committed.)
 
 ## KDE
 
@@ -49,9 +49,16 @@ Two things deliberately do **not** carry over:
 - **Tiling layouts.** Keyed by per-machine desktop/screen UUIDs. Re-draw with
   `Meta+T`.
 
-The launcher shortcuts (`Meta+T` Konsole, `Meta+S` Slack, `Meta+Shift+R`
-Spectacle) resolve by `.desktop` file name, so `configuration.nix` installs
-those packages — without them the keys silently do nothing.
+The launcher shortcuts resolve by `.desktop` file name, so the target apps must
+exist. `Meta+T` Konsole and `Meta+Shift+R` Spectacle come **for free with the
+Plasma 6 module** — `services.desktopManager.plasma6.enable = true` installs
+konsole, spectacle, kate, okular, dolphin, ark, gwenview and elisa by default,
+so they are not listed in `configuration.nix`. Only `Meta+S` Slack is added
+explicitly there, because Slack is not a KDE default.
+
+(To *remove* a default KDE app you'd use `environment.plasma6.excludePackages`
+— there is no `enableDefaultPackages` toggle for Plasma; that's a GNOME option.
+`kcalc` is **not** a default, so add `kdePackages.kcalc` if you want it.)
 
 ## Dev tooling
 
@@ -84,9 +91,22 @@ cargo install dz6
 
 It lands in `~/.cargo/bin`. Note that a cargo-built binary works on NixOS only
 because cargo compiles it against the Nix-provided toolchain — unlike a
-*prebuilt* binary, which would fail on the missing `/lib64/ld-linux` (the same
-reason `nvm` can't work here). If you ever want it declared, it's on crates.io
-and `rustPlatform.buildRustPackage` + `fetchCrate` would do it.
+*prebuilt* binary, which would fail on the missing `/lib64/ld-linux`. If you
+ever want it declared, it's on crates.io and `rustPlatform.buildRustPackage` +
+`fetchCrate` would do it.
+
+(`programs.nix-ld.enable` is on, which provides a shim `/lib64/ld-linux` so
+*some* foreign prebuilt binaries can run after all — but pinning packages from
+nixpkgs, or building from source like this, is still the clean path.)
+
+### Disk imaging (balena-etcher is gone)
+
+`configuration.nix` installs **`caligula`** (a Rust TUI imager) and **`popsicle`**
+(a GTK GUI imager) for flashing OS images to USB/SD. Balena Etcher is **not**
+here on purpose: it was *removed* from nixpkgs entirely (not merely broken), so
+`pkgs.balena-etcher` is a missing-attribute error with no `permittedInsecurePackages`
+fix. Upstream ships it as an Electron app whose bundled Electron goes EOL every
+few months; maintainers stopped chasing it and now point users at popsicle.
 
 ### Flatpak
 
@@ -114,21 +134,32 @@ flaky on NixOS.
 `programs.java.enable` is used rather than dropping the JDK into
 `systemPackages`, because it also sets `JAVA_HOME`.
 
-## Usage — installing on a new machine
+## Usage
+
+### Rebuilding this machine (the Acer)
+
+The committed `hardware-configuration.nix` is already this box's scan, so just
+rebuild from wherever the config lives:
+
+```bash
+sudo nixos-rebuild switch --flake .#nixos
+```
+
+### Installing on a new machine
 
 ```bash
 git clone git@github.com:hardik-choksi/dotfiles.git ~/dotfiles
-cp -r ~/dotfiles/nixos ~/nixos-config && cd ~/nixos-config
+cd ~/dotfiles/nixos
 
-# 1. REQUIRED. The committed hardware-configuration.nix is for another
-#    machine; without this the system will not boot.
+# 1. REQUIRED. The committed hardware-configuration.nix is the Acer's; on any
+#    other machine, replace it with that machine's own scan or it won't boot.
 sudo nixos-generate-config --show-hardware-config > hardware-configuration.nix
 
 # 2. Build.
 sudo nixos-rebuild switch --flake .#nixos
 ```
 
-Then:
+Then (first install only):
 
 - **Log out and back in.** The `docker` and `pcap` group memberships don't
   apply to an already-running session.

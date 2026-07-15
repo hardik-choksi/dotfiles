@@ -182,10 +182,11 @@
     fastfetch
     brave
 
-    # Targets of the Plasma shortcuts in plasma.nix — without these the
-    # bindings are dead keys (KDE resolves them by .desktop file name).
-    kdePackages.konsole    # Meta+T
-    kdePackages.spectacle  # Meta+Shift+R
+    # Targets of the Plasma shortcuts in plasma.nix. konsole (Meta+T) and
+    # spectacle (Meta+Shift+R) are NOT listed here: the plasma6 module already
+    # installs them by default (they're in its optionalPackages), so their
+    # .desktop files are present and the shortcuts resolve. Only add them back
+    # explicitly if you ever put them in environment.plasma6.excludePackages.
     slack                  # Meta+S  (unfree; needs allowUnfree above)
 
     # Kubernetes
@@ -278,8 +279,13 @@
                          # It bundles the streaming server; there is no
                          # separate service to enable.
 
-    # Disk utilities
-    # balena-etcher  # unfree; needs allowUnfree above
+    # Disk imaging (flash an OS image to USB/SD).
+    # NB: balena-etcher is deliberately absent -- it was REMOVED from nixpkgs
+    # (not just broken), because it bundles an Electron that goes EOL every few
+    # months and maintainers stopped chasing it. There is no `pkgs.balena-etcher`
+    # to un-break; nixpkgs steers you to these instead.
+    caligula   # Rust TUI imager -- the clean, no-caveat pick
+    popsicle   # GTK GUI imager (Pop!_OS); the maintainers' own etcher substitute
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
