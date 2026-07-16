@@ -293,6 +293,33 @@
     popsicle   # GTK GUI imager (Pop!_OS); the maintainers' own etcher substitute
   ];
 
+  # SSH agent + KWallet, so an SSH key passphrase is entered ONCE and then
+  # remembered across reboots (no more retyping on every git fetch/pull/push).
+  #
+  # How the pieces fit:
+  #   - startAgent: runs OpenSSH's ssh-agent as a per-user systemd service and
+  #     exports SSH_AUTH_SOCK. This is the ONE agent that holds unlocked keys;
+  #     don't also enable gnome-keyring's ssh or gpg-agent's SSH support, they
+  #     fight over the same socket.
+  #   - enableAskPassword + the Plasma 6 module together point SSH_ASKPASS at
+  #     ksshaskpass, a Qt dialog that reads/writes the passphrase from KWallet.
+  #   - SSH_ASKPASS_REQUIRE="prefer": without this, ssh-add run from a terminal
+  #     uses the tty prompt and never calls the GUI askpass -- the #1 reason
+  #     ksshaskpass "never shows up".
+  # First git-over-ssh op pops the ksshaskpass dialog once; tick "remember" and
+  # KWallet stores it. The kwallet PAM entries below auto-unlock the wallet at
+  # login (when the wallet password == the login password), so on later boots
+  # ksshaskpass reads the passphrase back silently -- you never type it again.
+  programs.ssh = {
+    startAgent = true;
+    enableAskPassword = true;
+  };
+  environment.variables.SSH_ASKPASS_REQUIRE = "prefer";
+
+  # Auto-unlock the default KWallet at login via PAM.
+  security.pam.services.login.kwallet.enable = true;
+  security.pam.services.sddm.kwallet.enable = true;
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -322,4 +349,20 @@
 
   # Enable the experimental Flakes feature permanently
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # Automatic garbage collection: weekly, delete every generation except the
+  # current one. This frees disk but removes the ability to roll back to older
+  # generations. For a safety window instead, swap options for:
+  #   "--delete-older-than 7d"
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-old";
+  };
+
+  # Deduplicate identical files in the Nix store to save space.
+  nix.optimise.automatic = true;
+
+  # Cap how many generations appear in the systemd-boot menu.
+  boot.loader.systemd-boot.configurationLimit = 5;
 }

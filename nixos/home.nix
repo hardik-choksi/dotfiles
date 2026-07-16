@@ -38,6 +38,22 @@
     "$HOME/gems/bin"
   ];
 
+  # SSH client config. Pairs with the system-level ssh-agent + ksshaskpass +
+  # KWallet setup in configuration.nix:
+  #   - AddKeysToAgent yes: once the passphrase is entered (ksshaskpass dialog,
+  #     remembered by KWallet), the unlocked key stays in the agent for the rest
+  #     of the session, so it isn't re-read on every git op.
+  #   - IdentityFile: the single ed25519 key this machine uses.
+  # Written as a literal file rather than via programs.ssh because home-manager's
+  # ssh module is mid-migration on unstable; a raw config is version-proof. ssh
+  # accepts a root-owned, non-world-writable config (a Nix store symlink is
+  # exactly that), so StrictModes doesn't complain.
+  home.file.".ssh/config".text = ''
+    Host *
+      AddKeysToAgent yes
+      IdentityFile ~/.ssh/id_ed25519
+  '';
+
   programs.zsh = {
     enable = true;
     enableCompletion = true;
