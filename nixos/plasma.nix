@@ -248,6 +248,13 @@ in
       "Effect-desktopgrid".LayoutMode = 1;
       "Tiling".padding = 4;
     };
+
+    # Region formats. KDE's Region & Language panel had written LANG=en_IN
+    # (no codeset) into plasma-localerc, which the session exports and which
+    # cascades into LC_CTYPE. Tools that string-match the locale name for
+    # "UTF-8" then fail -- e.g. btop: "No UTF-8 locale detected". Pin the
+    # UTF-8 variant so India formats stay but the codeset is explicit.
+    configFile.plasma-localerc.Formats.LANG = "en_IN.UTF-8";
   };
 
   # Konsole. plasma-manager's konsole module owns konsolerc, so configure it
