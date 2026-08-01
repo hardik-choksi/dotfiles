@@ -76,6 +76,12 @@
     #media-session.enable = true;
   };
 
+  # Bluetooth. Enables the BlueZ stack (bluetooth.service + bluetoothctl) and
+  # powers the adapter on at boot. Plasma 6 ships bluedevil for the GUI, so no
+  # separate applet (blueman) is needed.
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
+
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
@@ -190,6 +196,8 @@
     # .desktop files are present and the shortcuts resolve. Only add them back
     # explicitly if you ever put them in environment.plasma6.excludePackages.
     slack                  # Meta+S  (unfree; needs allowUnfree above)
+    element-desktop
+    telegram-desktop
 
     # Kubernetes
     kubectl
@@ -223,6 +231,9 @@
     gcc
     gnumake
     pkg-config
+    rustc      # Rust compiler
+    cargo      # Rust package manager / build tool -- needed for `cargo install`
+               # (e.g. dz6 below); compiles against this Nix toolchain.
 
     # ELF / binary analysis
     binutils   # readelf, objdump, nm, strings, ar, ld
@@ -237,7 +248,9 @@
     file
     hexyl      # quick hex dumps (xxd itself comes with vim, already enabled)
                # dz6 (the TUI hex editor) is not in nixpkgs and is installed
-               # by hand via `cargo install dz6`.
+               # by hand via `cargo install dz6 --locked`. The --locked is
+               # required: without it cargo ignores dz6's bundled Cargo.lock and
+               # pulls a newer mmap-io whose API breaks the build.
 
     # Android
     android-tools  # adb + fastboot. NB: there is no `fastboot` attribute.
@@ -283,6 +296,7 @@
                          # webengine) and is now a `throw`, which points here.
                          # It bundles the streaming server; there is no
                          # separate service to enable.
+    qbittorrent
 
     # Disk imaging (flash an OS image to USB/SD).
     # NB: balena-etcher is deliberately absent -- it was REMOVED from nixpkgs
@@ -291,6 +305,11 @@
     # to un-break; nixpkgs steers you to these instead.
     caligula   # Rust TUI imager -- the clean, no-caveat pick
     popsicle   # GTK GUI imager (Pop!_OS); the maintainers' own etcher substitute
+
+
+    # man pages
+    man-pages         # Linux man-pages project: sections 2, 3, etc.
+    man-pages-posix   # POSIX man pages
   ];
 
   # SSH agent + KWallet, so an SSH key passphrase is entered ONCE and then

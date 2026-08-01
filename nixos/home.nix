@@ -36,6 +36,7 @@
     "$HOME/go/bin"
     "$HOME/.local/bin"
     "$HOME/gems/bin"
+    "$HOME/.cargo/bin"   # `cargo install` binaries (e.g. dz6)
   ];
 
   # SSH client config. Pairs with the system-level ssh-agent + ksshaskpass +

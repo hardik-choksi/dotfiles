@@ -224,9 +224,11 @@ would be hard eval errors or silent surprises):
 
 ### `dz6` (hex editor) — installed by hand
 
-`dz6` isn't in nixpkgs: `cargo install dz6` (lands in `~/.cargo/bin`). It works
-because cargo compiles against the Nix toolchain — unlike a *prebuilt* binary,
-which would fail on the missing `/lib64/ld-linux`.
+`dz6` isn't in nixpkgs: `cargo install dz6 --locked` (lands in `~/.cargo/bin`).
+It works because cargo compiles against the Nix toolchain — unlike a *prebuilt*
+binary, which would fail on the missing `/lib64/ld-linux`. The `--locked` is
+required: without it cargo ignores dz6's bundled `Cargo.lock` and resolves a
+newer `mmap-io` whose changed `as_slice` API fails to compile.
 
 ### Docker is effectively root
 
