@@ -29,7 +29,12 @@
       "networkmanager"
       "wheel"
     ];
+    shell = pkgs.zsh;
   };
+
+  # Install Zsh and make it the login shell. User configuration such as
+  # ~/.zshrc remains mutable and is intentionally not managed here.
+  programs.zsh.enable = true;
 
   nix.settings.experimental-features = [
     "nix-command"
